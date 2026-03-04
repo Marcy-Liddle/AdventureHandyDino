@@ -6,7 +6,9 @@ _NOTE: This is an example based on the alternative project as if submitted for t
 
 **Dino Hanyman: Spanner in the Works** 
 
-This extension will turn the game into a simple Metroidvania where the dino handyman will unlock three new abilities to progress through one large level. This will include dash from level one, as well as the ability to throw spanners as a form of attacking enemies and a double jump.
+A two-level platformer prototype developed as an alternative trunk project to extend for CMP105 students from 2026 onwards. This project has most of the base requirements for a group submission. In the first level, the player has to navigate to the far right-side of the screen, avoiding pitfalls, and activate a lever before returning to the start. In the second level the player must investigate the high wall, backtrack to a box and jump into it from below to reveal a coin, colliding with the coin grants the ability to double-jump, using which they can navigate to the end of the level.
+
+The engineering for this game is restricted to solely using the framework with few additions. 
 
 **Controls:** 
 
@@ -17,6 +19,20 @@ R to reset (if you get stuck or fall down)
 P to pause,
 L-Control to dash,
 left mouseclick in the menu.
+
+***Extension suggestions***
+
+In addition to the proposal laid out below, there are several features which could usefully be added to this game as part of a branch project, here are a few:
+
+* The game cannot be paused
+* Entirely rework the player controller for precise teleportation-based movement rather than acceleration (which is odd in a platformer)
+* Write a textureLoader or textureManager class
+* Write a levelLoader that reads the tilemaps in from a file rather than them being hardcoded
+* Create a level editor where players can use the full tileset to create their own levels
+* Add more player actions -- the main character has a kick as part of their spritesheet
+* Add enemies with platform-restricted pathing 
+* Gravity manipulation 
+* Create a platforming setpiece to act as the final mechanical challenge
 
 ## Student Details
 
@@ -33,15 +49,13 @@ left mouseclick in the menu.
 
 ## Brief Overview of game 
 
-Dino Handyman: Spanner in the Works, will be a single-level metroidvania platformer where the play controls a small dinosaur. To begin with they will be able to jump, as the game progresses they will gain three skills -- dashing, double-jumping and attacking, in order to complete the game. The level will be setup so that progress is only possible with each ability, e.g., to cross the largest gap you will need to double-jump and to dash. The player will be timed while completing the level and at the end of the game, if they complete it without dying, they will be shown their time alongside the best time acheived. Additional levels could be created later thanks to the use of a data-driven level loading system which is used as the tilemap for the game. 
+Dino Handyman: Spanner in the Works, will be a single-level metroidvania platformer where the play controls a small dinosaur. To begin with they will be able to jump, as the game progresses they will gain three skills -- dashing, double-jumping and attacking, in order to complete the game. The level will be setup so that progress is only possible with each ability, e.g., to cross the largest gap you will need to double-jump and to dash. The player will be timed while completing the level and at the end of the game, if they complete it without dying, they will be shown their time alongside the best time achieved. Additional levels could be created later thanks to the use of a data-driven level loading system which is used as the tilemap for the game. 
 
 ## Must Have Features
 
 * Spanner Throwing: The player will be able to press 'r' to throw a spanner in the direction they are facing with a slight arc before it falls to the ground. 
 
 * Enemies: Gremlins will be in certain parts of the level and will move towards a player if they are in range. On collision with the player the level will be reset on collision with a spanner they will despawn.
-
-* Double Jumping: When they get a special coin, the player will be able to jump one more time in the air. This will allow them to get to a higher platform.
 
 ## Should Have Features
 
