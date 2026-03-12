@@ -23,14 +23,14 @@ Adventure of a Handy Dino
 
 ## Brief Overview of game 
 
-"Adventure of a Handy Dino" will be a metroidvania set in a small world populated with platforming challenges, enemies & boss fights. Throughout the game, the player will find abilities; such as a dash and a grapple for mobility and upgrades to their attacks that allow them to break through obstacles; that they will need to progress and beat the game. The world should be created using tilemaps and a data-driven level loading system.
+"Adventure of a Handy Dino" will be a metroidvania set in a small world populated with platforming challenges, enemies & boss fights. Throughout the game, the player will find abilities; such as a dash and a grapple for mobility and upgrades to their attacks that allow them to break through obstacles; that they will need to progress and beat the game. The world should be created using tilemaps and a data-driven level loading system, and the rooms will designed in a way that encourages backtracking to use any new abilities to get past obstacles that were previously roadblocks. At the end of the game, the time taken to beat the game as well as the amount of deaths will be displayed and written to file, as well as their best time & least amount of deaths.
 
-
-
+   
 ## Must Have Features
 
 * Enemies that move towards the player when they are close and attack to deal damage to the player that can also be damaged, killed & despawned by :
-* The player will 2 different types of attacks, a melee and a projectile that can be upgraded to deal more damage and break destructable terrain.
+* The player will have 2 different types of attacks, a melee and a projectile that can be upgraded to deal more damage and break destructable terrain.
+* The player will have a limited amount of health that can be decreased by enemies and trapsv & increased by pick-ups, and when it reaches 0 the game will allow them to go back to the start / last place they saved.
 
 ## Should Have Features
 
@@ -42,8 +42,8 @@ Adventure of a Handy Dino
 ## Could Have Features
 
 * A speedrun mode with a timer & possibly timesplits that are visible on a Heads-Up Display.
-* UI that shows the amount of health the player has, the objectives & any ability cooldowns.
-* Controller support: in addition to keyboard, the game could also be played with other controllers .  .  
+* UI that shows: the amount of health the player has, any ability cooldowns & the objectives.
+* Controller support: in addition to keyboard, the game could also be played with other controllers. 
 
 
 ## Wish to Have Features
