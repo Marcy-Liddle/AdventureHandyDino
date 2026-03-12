@@ -43,7 +43,7 @@ Adventure of a Handy Dino
 
 * A speedrun mode with a timer & possibly timesplits that are visible on a Heads-Up Display.
 * UI that shows the amount of health the player has, the objectives & any ability cooldowns.
-* Controller support: in addition to keyboard, the game could also be controlled by .  
+* Controller support: in addition to keyboard, the game could also be played with other controllers .  .  
 
 
 ## Wish to Have Features
