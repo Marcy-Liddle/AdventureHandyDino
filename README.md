@@ -23,7 +23,7 @@ Adventure of a Handy Dino
 
 ## Brief Overview of game 
 
-"Adventure of a Handy Dino" will be a metroidvania set in a small world populated with platforming challenges, enemies & boss fights. Throughout the game, the player will find abilities; such as a dash and a grapple for mobility and upgrades to their attacks that allow them to break through obstacles; that they will need to progress and beat the game. The world should be created using tilemaps and a data-driven level loading system, and the rooms will designed in a way that encourages backtracking to use any new abilities to get past obstacles that were previously roadblocks. At the end of the game, the time taken to beat the game as well as the amount of deaths will be displayed and written to file, as well as their best time & least amount of deaths.
+"Adventure of a Handy Dino" will be a metroidvania set in a small world populated with platforming challenges, enemies & at least 1 boss fight. Throughout the game, the player will find abilities; such as a dash and a grapple for mobility and upgrades to their attacks that allow them to break through obstacles; that they will need to progress and beat the game. The world should be created using tilemaps and a data-driven level loading system, and the rooms will designed in a way that encourages backtracking to use any new abilities to get past obstacles that were previously roadblocks. At the end of the game, the time taken to beat the game as well as the amount of deaths will be displayed and written to file, as well as their best time & least amount of deaths.
 
    
 ## Must Have Features
