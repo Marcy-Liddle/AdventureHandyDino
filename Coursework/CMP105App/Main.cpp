@@ -13,6 +13,7 @@
 #include "Framework/GameState.h"
 #include "LevelWithTiles.h"
 #include "LevelTwoWithTiles.h"
+#include "enemyLevel.h"
 
 #ifndef SFML_VERSION_MAJOR
 	#error "SFML 3 is required for this framework."
@@ -79,9 +80,10 @@ int main()
 {
 
 	//Create the window
-	sf::RenderWindow window(sf::VideoMode({ 432, 432 }), "Dino Handyman");
-	window.setVerticalSyncEnabled(true);
+	sf::RenderWindow window(sf::VideoMode({ 432, 432 }), "Dino Handyman" );
 
+	window.setVerticalSyncEnabled(true);
+	
 	// Initialise input and manager objects.
 	AudioManager audioManager;
 	Input input;
@@ -94,6 +96,7 @@ int main()
 	LevelWithTiles tile_level(window, input, gameState, audioManager);
 	LevelTwoWithTiles tile_level_two(window, input, gameState, audioManager);
 	Scene* currentScene = &menu;
+	enemyLevel enemyTest(window, input, gameState, audioManager);
 
 	// Initialise objects for delta time
 	sf::Clock clock;
@@ -128,9 +131,14 @@ int main()
 			currentScene->onBegin();
 		}
 		// run the core loop for the current scene
-		currentScene->handleInput(deltaTime);
-		currentScene->update(deltaTime);
-		currentScene->render();
+		//currentScene->handleInput(deltaTime);
+		//currentScene->update(deltaTime);
+		//currentScene->render();
+
+		enemyTest.handleInput(deltaTime);
+		enemyTest.update(deltaTime);
+		enemyTest.render();
+
 
 		// Update input class, handle pressed keys
 		// Must be done last.

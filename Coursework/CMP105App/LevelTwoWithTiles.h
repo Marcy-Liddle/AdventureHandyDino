@@ -6,7 +6,7 @@
 #include "Coin.h"
 #include "Flag.h"
 #include <algorithm> // for clamp
-
+#include "enemy1.h"
 
 class LevelTwoWithTiles :
     public Scene
