@@ -28,7 +28,7 @@ enemy1::enemy1()
 	anim_idle.setFrameSpeed(1.f / 4.f);
 
 
-	setCollisionBox({ {0,0}, { 36,36 } });
+	setCollisionBox({ {3,3}, { 30,30 } });
 	anim_current = &anim_idle;
 	//setTextureRect(anim_current->getCurrentFrame());
 
