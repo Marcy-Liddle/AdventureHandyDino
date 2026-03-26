@@ -123,6 +123,11 @@ void enemyLevel::update(float dt)
 		{
 			m_player.collisionResponse(t);
 		}
+
+		else if (t.isCollider() && Collision::checkBoundingBox(m_enemy, t))
+		{
+			m_enemy.collisionResponse(t);
+		}
 	}
 
 	if (Collision::checkBoundingCircle(m_player.m_aggroRange, m_enemy))

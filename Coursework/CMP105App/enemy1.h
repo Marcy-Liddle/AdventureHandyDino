@@ -40,5 +40,7 @@ private:
     const float CLOSE_ENOUGH = 10.0f;
     const float IDLE_DISTANCE = 150.0f;
     const float IDLE_WAIT = 3.f;
+    const float GRAVITY = 50.0f;
+
 };
 
