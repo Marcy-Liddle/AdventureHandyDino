@@ -99,7 +99,7 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 
 
 
-	m_enemy.setPosition({ 1382.97,301.5 });
+	m_enemy.setPosition({ 1082.97,300.5 });
 }
 
 void enemyLevel::handleInput(float dt) 
@@ -113,8 +113,8 @@ void enemyLevel::update(float dt)
 {
 
 	m_player.update(dt);
-	//std::cout << m_player.getPosition().x << "," << m_player.getPosition().y << "\n";
 	m_enemy.update(dt);
+
 	// handle collisions
 	std::vector<GameObject>& level = *m_tilemap.getLevel();
 	for (auto& t : level)
@@ -123,6 +123,23 @@ void enemyLevel::update(float dt)
 		{
 			m_player.collisionResponse(t);
 		}
+	}
+
+	if (Collision::checkBoundingCircle(m_player.m_aggroRange, m_enemy))
+	{
+		if (m_enemy.getPlayerPointer() == nullptr)
+			m_enemy.setPlayerPointer(&m_player);
+
+		if (Collision::checkBoundingBox(m_player, m_enemy))
+		{
+			m_player.setCurrentHealth(-5.f );
+			std::cout << m_player.getCurrentHealth() << "\n";
+			m_player.collisionResponse(m_enemy);
+		 }
+	}
+	else 
+	{
+		m_enemy.clearPlayerPointer();
 	}
 
 	updateCameraAndBackground();
@@ -152,6 +169,7 @@ void enemyLevel::render()
 
 	m_bgtilemap.render(m_window);
 	m_tilemap.render(m_window);
+	//m_window.draw(m_player.m_aggroRange);
 	m_window.draw(m_player);
 	m_window.draw(m_enemy);
 	endDraw();

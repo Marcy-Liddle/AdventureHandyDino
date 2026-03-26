@@ -1,19 +1,21 @@
 #pragma once
 #include "Framework/GameObject.h"
-#include "Framework/Animation.h"
+
 #include <iostream>
 #include "Framework/AudioManager.h"
-
+#include "Character.h"
 
 class Player :
-    public GameObject
+    public Character
 {
+
 public:
     Player();
 
     void handleInput(float dt) override;
     void update(float dt) override;
     void collisionResponse(GameObject& collider) override;
+
     void setEdges(float left, float right) { m_leftEdge = left; m_rightEdge = right; };
     void setLeverPosition(sf::Vector2f leverPos) { m_leverPosition = leverPos; };
     void setEndGamePosition(sf::Vector2f endPos) { m_endPosition = endPos; };
@@ -25,6 +27,8 @@ public:
     void setCanDoubleJump(bool value) { m_canDoubleJump = value; };
     bool canDoubleJump() { return m_canDoubleJump; };
     void setAudio(AudioManager* audio) { m_audio = audio; };
+
+    GameObject m_aggroRange;
 
 private:
     sf::Texture m_dinoTexture;
@@ -45,6 +49,7 @@ private:
     bool m_hasDoubleJumped;
     AudioManager* m_audio;
 
+
     const float SPRINT_COOLDOWN = 2.0f;
     const float SPRINT_SPEED_MULT = 2.5f;
     const float SPEED = 10.0f;
@@ -56,6 +61,6 @@ private:
     const float JUMP_FORCE = 20.0f;
     const float SPRINT_ANIM_THRESHOLD = 1.2f * SPEED;
     const float ACTIVATE_RANGE_SQUARED = 700.0f;
-
+    
 };
 

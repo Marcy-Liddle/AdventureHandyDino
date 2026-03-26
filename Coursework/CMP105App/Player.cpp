@@ -26,6 +26,17 @@ Player::Player()
 	setCollisionBox({ {12,12}, { 45,51 } });
 
 	m_isGrounded = false;
+
+	float radius = getSize().x / 2.f;
+	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
+
+	m_aggroRange.setSize({ 360.f , 360.f });
+	radius = m_aggroRange.getSize().x /2;
+	m_aggroRange.setPosition({ centre.x - radius, centre.y - radius });
+	m_aggroRange.setFillColor(sf::Color::Magenta); //debug
+
+	setCurrentHealth(getMaxHealth());
+
 }
 
 void Player::handleInput(float dt)
@@ -79,11 +90,22 @@ void Player::handleInput(float dt)
 	{
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
-
+	
 }
 
 void Player::update(float dt)
 {
+	if (getCurrentHealth() <= 0)
+		reset();
+
+	float radius = getSize().x / 2.f;
+	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
+
+	m_aggroRange.setSize({ 540.f , 540.f });
+	radius = m_aggroRange.getSize().x / 2;
+	m_aggroRange.setPosition({ centre.x - radius, centre.y - radius });
+
+
 	// newtonian model
 	m_accel.y += GRAVITY;
 	m_velocity += dt * m_accel;
@@ -111,6 +133,7 @@ void Player::update(float dt)
 		m_currAnim->setFlipped(!m_currAnim->getFlipped());	
 
 	move(m_velocity);
+
 
 	// keep within L/R bounds
 	if (getPosition().x < m_leftEdge)
@@ -177,4 +200,5 @@ void Player::reset()
 	m_velocity = { 0,0 };
 	m_leverPulled = false;
 	m_gameEndTriggered = false;
+	setCurrentHealth(getMaxHealth());
 }
