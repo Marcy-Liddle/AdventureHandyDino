@@ -34,17 +34,18 @@ Adventure of a Handy Dino
 
 ## Should Have Features
 
-* Metroidvania-like progression system (upgrades for the attacks) as well as movement-based abilities; at least a dash for moving greater distances in any direction and an aimable grappling skill to reach even further; unlocked through pickups hidden throughout the:
+* Metroidvania-like progression system (upgrades for the attacks) as well as movement-based abilities; at least a dash for moving greater distances in any direction; unlocked through pickups hidden throughout the:
 * Game world: Data-driven enviroment consisting of screens with collectables hidden behind obstacles you will need abilities to get through. It shoud also have a limited amount of save points to act as respawn points and record the abilities that the player has currently.
 * At least 1 boss fight to find and defeat with the aid of unlocked abilities to beat the game.
 * The ability to pause the game with a transparent overlay and menu & resume exactly as was before.
+* UI that shows: the amount of health the player has left: moved up in priority
 
 ## Could Have Features
 
 * A speedrun mode with a timer & possibly timesplits that are visible on a Heads-Up Display.
-* UI that shows: the amount of health the player has, any ability cooldowns & the objectives.
+* UI also shows any ability cooldowns & the objectives.
 * Controller support: in addition to keyboard, the game could also be played with other controllers. 
-
+* The "aimable grappling skill to reach even further" from my original proposal has been moved down in priority.
 
 ## Wish to Have Features
 
