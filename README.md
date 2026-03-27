@@ -30,7 +30,7 @@ Adventure of a Handy Dino
 
 * Enemies that move towards the player when they are close and attack to deal damage to the player that can also be damaged, killed & despawned by :
 * The player will have 2 different types of attacks, a melee and a projectile that can be upgraded to deal more damage and break destructable terrain.
-* The player will have a limited amount of health that can be decreased by enemies and trapsv & increased by pick-ups, and when it reaches 0 the game will allow them to go back to the start / last place they saved.
+* The player will have a limited amount of health that can be decreased by enemies and traps & increased by pick-ups, and when it reaches 0 the game will allow them to go back to the start / last place they saved.
 
 ## Should Have Features
 
