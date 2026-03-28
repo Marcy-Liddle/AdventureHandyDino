@@ -183,10 +183,8 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="enemy1.cpp" />
     <ClCompile Include="enemyLevel.cpp" />
-    <ClCompile Include="Flag.cpp" />
     <ClCompile Include="Framework\Animation.cpp" />
     <ClCompile Include="Framework\AudioManager.cpp" />
     <ClCompile Include="Framework\BaseLevel.cpp" />
@@ -196,9 +194,6 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="Framework\GameObject.cpp" />
     <ClCompile Include="Framework\SoundObject.cpp" />
     <ClCompile Include="Framework\TileMap.cpp" />
-    <ClCompile Include="LevelTwoWithTiles.cpp" />
-    <ClCompile Include="LevelWithTiles.cpp" />
-    <ClCompile Include="Lever.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -206,10 +201,8 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
-    <ClInclude Include="Coin.h" />
     <ClInclude Include="enemy1.h" />
     <ClInclude Include="enemyLevel.h" />
-    <ClInclude Include="Flag.h" />
     <ClInclude Include="Framework\Animation.h" />
     <ClInclude Include="Framework\AudioManager.h" />
     <ClInclude Include="Framework\BaseLevel.h" />
@@ -219,9 +212,6 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="Framework\GameObject.h" />
     <ClInclude Include="Framework\SoundObject.h" />
     <ClInclude Include="Framework\TileMap.h" />
-    <ClInclude Include="LevelTwoWithTiles.h" />
-    <ClInclude Include="LevelWithTiles.h" />
-    <ClInclude Include="Lever.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />

@@ -17,12 +17,8 @@ public:
     void collisionResponse(GameObject& collider) override;
     
     void setEdges(float left, float right) { m_leftEdge = left; m_rightEdge = right; };
-    void setLeverPosition(sf::Vector2f leverPos) { m_leverPosition = leverPos; };
-    void setEndGamePosition(sf::Vector2f endPos) { m_endPosition = endPos; };
-    bool inLeverRange();
-    bool inEndRange();
-    bool getLeverPulled() { return m_leverPulled; };
-    bool getGameEndTriggered() { return m_gameEndTriggered; };
+   
+   
     void reset();
     void setCanDoubleJump(bool value) { m_canDoubleJump = value; };
     bool canDoubleJump() { return m_canDoubleJump; };
@@ -46,10 +42,8 @@ private:
     bool m_isGrounded;
     float m_leftEdge;
     float m_rightEdge;
-    sf::Vector2f m_leverPosition;
-    sf::Vector2f m_endPosition;
-    bool m_leverPulled = false;
-    bool m_gameEndTriggered = false;
+
+
     bool m_canDoubleJump;
     bool m_hasDoubleJumped;
     bool m_isKicking = false;

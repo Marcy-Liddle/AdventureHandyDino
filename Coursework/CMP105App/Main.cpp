@@ -8,11 +8,8 @@
 #include <iostream>
 #include "Scene.h"
 #include "Menu.h"
-#include "LevelThatSaves.h"
 #include "Framework/AudioManager.h"
 #include "Framework/GameState.h"
-#include "LevelWithTiles.h"
-#include "LevelTwoWithTiles.h"
 #include "enemyLevel.h"
 
 #ifndef SFML_VERSION_MAJOR
@@ -93,8 +90,6 @@ int main()
 	// Create level objects that may reference manager objects
 
 	Menu menu(window, input, gameState, audioManager);
-	LevelWithTiles tile_level(window, input, gameState, audioManager);
-	LevelTwoWithTiles tile_level_two(window, input, gameState, audioManager);
 	Scene* currentScene = &menu;
 	enemyLevel enemyTest(window, input, gameState, audioManager);
 
@@ -108,8 +103,6 @@ int main()
 	std::map<State, Scene*> sceneRegistry =
 	{
 		{State::MENU, &menu},
-		{State::LEVELONE, &tile_level},
-		{State::LEVELTWO, &tile_level_two}
 	};
 	
 	// Game Loop

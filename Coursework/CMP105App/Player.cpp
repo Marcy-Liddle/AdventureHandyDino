@@ -81,18 +81,7 @@ void Player::handleInput(float dt)
 			m_velocity.x = -SPEED * SPRINT_SPEED_MULT;
 		m_sprintTimer = SPRINT_COOLDOWN;
 	}
-	if (m_input->isPressed(sf::Keyboard::Scancode::F))
-	{
-		if (inLeverRange() && !m_leverPulled)
-		{
-			m_leverPulled = true;
-			m_audio->playSoundbyName("wind");
-		}
-		if (m_leverPulled && inEndRange())
-		{
-			m_gameEndTriggered = true;
-		}
-	}
+	
 
 	// for debugging: "Where am I?"
 	if (m_input->isPressed(sf::Keyboard::Scancode::T))
@@ -211,22 +200,12 @@ void Player::collisionResponse(GameObject& collider)
 	}
 }
 
-bool Player::inLeverRange()
-{
-	return (getPosition() - m_leverPosition).lengthSquared() < ACTIVATE_RANGE_SQUARED;
-}
-
-bool Player::inEndRange()
-{
-	return (getPosition() - m_endPosition).lengthSquared() < ACTIVATE_RANGE_SQUARED;
-}
 
 void Player::reset()
 {
 	setPosition({ 0, 50 });
 	m_velocity = { 0,0 };
-	m_leverPulled = false;
-	m_gameEndTriggered = false;
+
 	m_currentHealth = MAX_HEALTH;
 
 }
