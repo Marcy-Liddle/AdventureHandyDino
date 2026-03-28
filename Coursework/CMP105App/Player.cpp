@@ -13,8 +13,16 @@ Player::Player()
 
 	for (int i = 0; i < 4; i++)
 		m_idle.addFrame({{ i * 24, 0 }, { 24, 24} });
+
 	for (int i = 4; i < 10; ++i)
 		m_walk.addFrame({{ i * 24, 0 }, { 24, 24}});
+
+	for (int i = 10; i < 14; i++)
+		m_kick.addFrame({ { i * 24, 0 }, { 24, 24} });
+
+	for (int i = 14; i < 16; i++)
+		m_hazardKick.addFrame({ { i * 24, 0 }, { 24, 24} });
+
 	for(int i = 16; i < 24; i++)
 		m_sprint.addFrame({ { i * 24, 0 }, { 24, 24} });
 
@@ -22,16 +30,29 @@ Player::Player()
 	m_walk.setFrameSpeed(1.f / 10.f);
 	m_idle.setFrameSpeed(1.f / 4.f);
 	m_sprint.setFrameSpeed(1.4 / 15.0f);
-
+	m_kick.setFrameSpeed(1.f / 4.f);
+	 m_kick.setLooping(false);
 	setCollisionBox({ {12,12}, { 45,51 } });
 
 	m_isGrounded = false;
+
+	float radius = getSize().x / 2.f;
+	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
+
+	m_aggroRange.setSize({ 360.f , 360.f });
+	radius = m_aggroRange.getSize().x /2;
+	m_aggroRange.setPosition({ centre.x - radius, centre.y - radius });
+	m_aggroRange.setFillColor(sf::Color::Magenta); //debug
+
+	setCurrentHealth(getMaxHealth());
+
 }
 
 void Player::handleInput(float dt)
 {
 	m_accel = { 0,0 };
-
+	if (m_input->isKeyDown(sf::Keyboard::Scancode::H))
+		m_isKicking = true;
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::A))
 		m_accel.x -= SPEED;
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::D))
@@ -50,8 +71,7 @@ void Player::handleInput(float dt)
 	}
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::R))	// Reset (for debugging)
 	{
-		setPosition({ 50,0 });
-		m_velocity = { 0,0 };
+		reset();
 	}
 	if (m_input->isPressed(sf::Keyboard::Scancode::LControl) && m_sprintTimer <= 0)
 	{
@@ -79,11 +99,22 @@ void Player::handleInput(float dt)
 	{
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
-
+	
 }
 
 void Player::update(float dt)
 {
+	if (getCurrentHealth() <= 0)
+		reset();
+
+	float radius = getSize().x / 2.f;
+	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
+
+	m_aggroRange.setSize({ 540.f , 540.f });
+	radius = m_aggroRange.getSize().x / 2;
+	m_aggroRange.setPosition({ centre.x - radius, centre.y - radius });
+
+
 	// newtonian model
 	m_accel.y += GRAVITY;
 	m_velocity += dt * m_accel;
@@ -96,21 +127,39 @@ void Player::update(float dt)
 	if (m_sprintTimer > 0) m_sprintTimer -= dt;	// tick down the sprint cooldown
 
 	// handle animation
-	float speed = std::abs(m_velocity.x);	// sideways speed
-	if (speed < 1.0)
-		m_currAnim = &m_idle;
-	else if (speed > SPRINT_ANIM_THRESHOLD)
-		m_currAnim = &m_sprint;
+	if (m_isKicking)
+	{
+		if (m_currAnim != &m_kick)
+		{
+			m_currAnim = &m_kick;
+		}
+		else if (!m_kick.getPlaying())
+		{
+			m_isKicking = false;
+			m_kick.reset();
+			m_kick.setPlaying(true);
+		}
+
+	}
 	else
-		m_currAnim = &m_walk;
-
-	// face direction
-	if (m_velocity.x > 0 && m_currAnim->getFlipped()
-		|| m_velocity.x < 0 && !m_currAnim->getFlipped())
-		// if we gotta flip, flip.
-		m_currAnim->setFlipped(!m_currAnim->getFlipped());	
-
+	{
+		
+		float speed = std::abs(m_velocity.x);	// sideways speed
+		if (speed < 1.0)
+			m_currAnim = &m_idle;
+		else if (speed > SPRINT_ANIM_THRESHOLD)
+			m_currAnim = &m_sprint;
+		else
+			m_currAnim = &m_walk;
+}
+		// face direction
+		if (m_velocity.x > 0 && m_currAnim->getFlipped()
+			|| m_velocity.x < 0 && !m_currAnim->getFlipped())
+			// if we gotta flip, flip.
+			m_currAnim->setFlipped(!m_currAnim->getFlipped());
+	
 	move(m_velocity);
+
 
 	// keep within L/R bounds
 	if (getPosition().x < m_leftEdge)
@@ -122,6 +171,7 @@ void Player::update(float dt)
 		setPosition({ m_rightEdge - getSize().x, getPosition().y});
 	}
 
+	//m_currAnim = &m_kick;
 	m_currAnim->animate(dt);
 	setTextureRect(m_currAnim->getCurrentFrame());
 }
@@ -177,4 +227,6 @@ void Player::reset()
 	m_velocity = { 0,0 };
 	m_leverPulled = false;
 	m_gameEndTriggered = false;
+	m_currentHealth = MAX_HEALTH;
+
 }
