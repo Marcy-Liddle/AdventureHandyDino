@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Framework/AudioManager.h"
 #include "Character.h"
+#include "fireBlast.h"
+
+
 
 class Player :
     public Character
@@ -23,13 +26,22 @@ public:
     void setCanDoubleJump(bool value) { m_canDoubleJump = value; };
     bool canDoubleJump() { return m_canDoubleJump; };
     void setAudio(AudioManager* audio) { m_audio = audio; };
+    bool isAttacking() { return m_isKicking; }
+    
 
     GameObject m_aggroRange;
-    GameObject* m_kickAttack;
+    GameObject m_meleeHitBox;
+
+    std::vector<fireBlast*> m_projectiles;
 
 private:
     sf::Texture m_dinoTexture;
+    sf::Texture m_fireballTexture;
+
+
     Animation* m_currAnim;
+    Animation* m_prevAnim;
+
     Animation m_idle;
     Animation m_walk;
     Animation m_sprint;
@@ -47,6 +59,14 @@ private:
     bool m_canDoubleJump;
     bool m_hasDoubleJumped;
     bool m_isKicking = false;
+
+    sf::FloatRect m_normalHurtBox;
+
+    //different kick hitbox/hurtbox for facing l/r (0,1)
+    sf::FloatRect m_kickHitBox[2];
+    sf::FloatRect m_meleeHurtBox[2];
+
+
     AudioManager* m_audio;
 
 
@@ -58,9 +78,11 @@ private:
     const float DRAG_FACTOR = 0.9f;
     const float AIR_DRAG_FACTOR = 0.99f;
     const float TURN_DRAG = 0.6f;       // allow snappy decel for turning
-    const float JUMP_FORCE = 20.0f;
+    const float JUMP_FORCE = 15.0f;
     const float SPRINT_ANIM_THRESHOLD = 1.2f * SPEED;
     const float ACTIVATE_RANGE_SQUARED = 700.0f;
     
 };
+
+
 

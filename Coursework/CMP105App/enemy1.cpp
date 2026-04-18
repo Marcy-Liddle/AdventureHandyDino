@@ -13,7 +13,7 @@ enemy1::enemy1()
 		{m_spawnPoint.x + IDLE_DISTANCE, m_spawnPoint.y}
 	};
 
-	if(!spr_idleSheet.loadFromFile("gfx/characters/enemies/slime/slimer-idle1.png"))
+	if(!spr_idleSheet.loadFromFile("gfx/characters/enemies/slime/slime_idle.png"))
 		std::cerr << "No slime texture. sad";
 	
 	setTexture(&spr_idleSheet);
@@ -27,10 +27,10 @@ enemy1::enemy1()
 	
 	anim_idle.setFrameSpeed(1.f / 4.f);
 
-
+	
 	setCollisionBox({ {3,3}, { 30,30 } });
 	anim_current = &anim_idle;
-	//setTextureRect(anim_current->getCurrentFrame());
+	setTextureRect(anim_current->getCurrentFrame());
 
 }
 
@@ -47,8 +47,8 @@ void enemy1::update(float dt)
 		setPosition(m_spawnPoint);
 	else 
 	{
-	//	anim_current->animate(dt);
-		//setTextureRect(anim_current->getCurrentFrame());
+	anim_current->animate(dt);
+		setTextureRect(anim_current->getCurrentFrame());
 		sf::Vector2f to_target;
 		if (m_playerPointer)
 		{
@@ -93,7 +93,8 @@ void enemy1::update(float dt)
 
 	}
 
-
+	if (m_currentHealth <= 0)
+		setAlive(false);
 }
 
 

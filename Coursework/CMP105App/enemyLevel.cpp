@@ -111,7 +111,6 @@ void enemyLevel::handleInput(float dt)
 
 void enemyLevel::update(float dt)
 {
-
 	m_player.update(dt);
 	m_enemy.update(dt);
 
@@ -128,25 +127,45 @@ void enemyLevel::update(float dt)
 		{
 			m_enemy.collisionResponse(t);
 		}
+
+		for (int i = 0; i < m_player.m_projectiles.size(); i++)
+		{
+			if (t.isCollider() && Collision::checkBoundingBox(t, *m_player.m_projectiles[i]))
+			{
+				m_player.m_projectiles[i]->collisionResponse();
+			}
+
+		}
 	}
+
+
 
 	if (Collision::checkBoundingCircle(m_player.m_aggroRange, m_enemy))
 	{
 		if (m_enemy.getPlayerPointer() == nullptr)
 			m_enemy.setPlayerPointer(&m_player);
 
-		if (Collision::checkBoundingBox(m_player, m_enemy))
+		if (!m_player.getInvincible() && Collision::checkBoundingBox(m_player, m_enemy))
 		{
-			m_player.setCurrentHealth(-5.f );
-			std::cout << m_player.getCurrentHealth() << "\n";
+			m_player.healAndDeal(-5.f );
+			//std::cout << m_player.getCurrentHealth() << "\n";
 			m_player.collisionResponse(m_enemy);
+			m_player.setInvincible(true);
+			m_player.knockBack({ 10,10 });
 		 }
+
+		if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, m_enemy))
+			{
+				m_enemy.healAndDeal(-100.f);
+			}
+		
+			
 	}
 	else 
 	{
 		m_enemy.clearPlayerPointer();
 	}
-
+	
 	updateCameraAndBackground();
 }
 
@@ -176,6 +195,13 @@ void enemyLevel::render()
 	m_tilemap.render(m_window);
 	//m_window.draw(m_player.m_aggroRange);
 	m_window.draw(m_player);
-	m_window.draw(m_enemy);
+
+	if (m_enemy.isAlive())
+		m_window.draw(m_enemy);
+
+	for (auto f : m_player.m_projectiles)
+	{
+		if (f->isAlive()) m_window.draw(*f);
+	}
 	endDraw();
 }

@@ -185,6 +185,7 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="enemy1.cpp" />
     <ClCompile Include="enemyLevel.cpp" />
+    <ClCompile Include="fireBlast.cpp" />
     <ClCompile Include="Framework\Animation.cpp" />
     <ClCompile Include="Framework\AudioManager.cpp" />
     <ClCompile Include="Framework\BaseLevel.cpp" />
@@ -203,6 +204,7 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="Character.h" />
     <ClInclude Include="enemy1.h" />
     <ClInclude Include="enemyLevel.h" />
+    <ClInclude Include="fireBlast.h" />
     <ClInclude Include="Framework\Animation.h" />
     <ClInclude Include="Framework\AudioManager.h" />
     <ClInclude Include="Framework\BaseLevel.h" />

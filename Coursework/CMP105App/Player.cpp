@@ -3,7 +3,9 @@
 Player::Player()
 {
 	if (!m_dinoTexture.loadFromFile("gfx/dino1.png"))
-		std::cerr << "No dino texture. sad";
+		std::cerr << "No dino texture. sad \n";
+	if (!m_fireballTexture.loadFromFile("gfx/fireBall.png"))
+		std::cerr << "Fire texture got put out\n";
 
 	setTexture(&m_dinoTexture);
 	// Dino is 24x24, tiles are 18x18
@@ -26,14 +28,25 @@ Player::Player()
 	for(int i = 16; i < 24; i++)
 		m_sprint.addFrame({ { i * 24, 0 }, { 24, 24} });
 
+
+	
 	m_currAnim = &m_walk;
 	m_walk.setFrameSpeed(1.f / 10.f);
 	m_idle.setFrameSpeed(1.f / 4.f);
 	m_sprint.setFrameSpeed(1.4 / 15.0f);
-	m_kick.setFrameSpeed(1.f / 4.f);
+	m_kick.setFrameSpeed(1.f / 8.f);
 	 m_kick.setLooping(false);
-	setCollisionBox({ {12,12}, { 45,51 } });
+	
+	m_normalHurtBox = sf::FloatRect({ {12,12}, { 45,51} });
+	setCollisionBox(m_normalHurtBox);
+	m_meleeHitBox.setSize(getSize());
 
+	m_kickHitBox[0] = sf::FloatRect({0,39}, {23,19});
+	m_kickHitBox[1] = sf::FloatRect({ 49,39 }, { 23,19 });
+
+	m_meleeHurtBox[0] = sf::FloatRect({23,12}, {39,51});
+	m_meleeHurtBox[1] = sf::FloatRect({ 12,12 }, { 39,51 });
+	
 	m_isGrounded = false;
 
 	float radius = getSize().x / 2.f;
@@ -81,7 +94,12 @@ void Player::handleInput(float dt)
 			m_velocity.x = -SPEED * SPRINT_SPEED_MULT;
 		m_sprintTimer = SPRINT_COOLDOWN;
 	}
-	
+	if (m_input->isPressed(sf::Keyboard::Scancode::F))
+	{
+		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), 4, getPosition());
+		newFire->setTexture(&m_fireballTexture);
+		m_projectiles.push_back(newFire);
+	}
 
 	// for debugging: "Where am I?"
 	if (m_input->isPressed(sf::Keyboard::Scancode::T))
@@ -93,8 +111,19 @@ void Player::handleInput(float dt)
 
 void Player::update(float dt)
 {
+	m_prevAnim = m_currAnim;
 	if (getCurrentHealth() <= 0)
 		reset();
+
+	if (m_isInvincible)
+		invincibiltyFrames(dt);
+
+
+	for (fireBlast* f : m_projectiles)
+	{
+		if (f->isAlive()) f->update(dt);
+	}
+
 
 	float radius = getSize().x / 2.f;
 	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
@@ -118,15 +147,22 @@ void Player::update(float dt)
 	// handle animation
 	if (m_isKicking)
 	{
+		setCollisionBox(m_meleeHurtBox[!m_currAnim->getFlipped()]);
+		
+		m_meleeHitBox.setPosition(getPosition());
+		m_meleeHitBox.setCollisionBox(m_kickHitBox[!m_currAnim->getFlipped()]);;
+	
+
 		if (m_currAnim != &m_kick)
-		{
 			m_currAnim = &m_kick;
-		}
-		else if (!m_kick.getPlaying())
+
+		if (!m_kick.getPlaying())
 		{
 			m_isKicking = false;
 			m_kick.reset();
 			m_kick.setPlaying(true);
+			setCollisionBox(m_normalHurtBox);
+			m_meleeHitBox.setCollisionBox({ { 0,0 }, { 0,0 } });
 		}
 
 	}
@@ -142,8 +178,7 @@ void Player::update(float dt)
 			m_currAnim = &m_walk;
 }
 		// face direction
-		if (m_velocity.x > 0 && m_currAnim->getFlipped()
-			|| m_velocity.x < 0 && !m_currAnim->getFlipped())
+		if (m_velocity.x > 0 && m_currAnim->getFlipped() || m_velocity.x < 0 && !m_currAnim->getFlipped())
 			// if we gotta flip, flip.
 			m_currAnim->setFlipped(!m_currAnim->getFlipped());
 	
@@ -160,10 +195,12 @@ void Player::update(float dt)
 		setPosition({ m_rightEdge - getSize().x, getPosition().y});
 	}
 
-	//m_currAnim = &m_kick;
 	m_currAnim->animate(dt);
 	setTextureRect(m_currAnim->getCurrentFrame());
 }
+
+
+
 
 // only used on tiles for now.
 // collider confirmed to be tile with .isCollider=true
