@@ -12,6 +12,7 @@
 #include "Framework/GameState.h"
 #include "enemyLevel.h"
 
+
 #ifndef SFML_VERSION_MAJOR
 	#error "SFML 3 is required for this framework."
 #endif
@@ -89,8 +90,8 @@ int main()
 
 	// Create level objects that may reference manager objects
 
-	Menu menu(window, input, gameState, audioManager);
-	Scene* currentScene = &menu;
+	Menu menu(window, input, gameState, audioManager, "Main");
+//	Scene* currentScene = &menu;
 	enemyLevel enemyTest(window, input, gameState, audioManager);
 
 	// Initialise objects for delta time
@@ -98,12 +99,12 @@ int main()
 	float deltaTime = 0.f;
 
 	gameState.setCurrentState(State::MENU);
-	menu.onBegin();
+	//menu.onBegin();
 
-	std::map<State, Scene*> sceneRegistry =
-	{
-		{State::MENU, &menu},
-	};
+	//std::map<State, Scene*> sceneRegistry =
+	//{
+	//	{State::MENU, &menu},
+	//};
 	
 	// Game Loop
 	while (window.isOpen())
@@ -116,17 +117,20 @@ int main()
 		deltaTime = clock.restart().asSeconds();
 		if (deltaTime > 0.1f) deltaTime = 0.1f; // Clamp delta time to avoid large jumps
 
-		State requestedState = gameState.getCurrentState();
-		if (sceneRegistry[requestedState] != currentScene)
 		{
-			currentScene->onEnd();
-			currentScene = sceneRegistry[requestedState];
-			currentScene->onBegin();
-		}
+			//State requestedState = gameState.getCurrentState();
+		//if sceneRegistry[requestedState] != currentScene)
+		//{
+		//	currentScene->onEnd();
+		//	currentScene = sceneRegistry[requestedState];
+		//	currentScene->onBegin();
+		//}
 		// run the core loop for the current scene
 		//currentScene->handleInput(deltaTime);
 		//currentScene->update(deltaTime);
 		//currentScene->render();
+		}
+		
 
 		enemyTest.handleInput(deltaTime);
 		enemyTest.update(deltaTime);

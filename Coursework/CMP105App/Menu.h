@@ -1,29 +1,33 @@
 #pragma once
 #include "Scene.h"
 #include "Framework/Collision.h"
+#include "menuButton.h"
+#include <fStream>
+
 class Menu :
-    public Scene
+    public BaseLevel
 {
 public:
-    Menu(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio);
+    Menu(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio, std::string menuType);
+    Menu(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio, std::string menuType, std::string song);
 
     void handleInput(float dt) override;
     void update(float dt) override;
     void render() override;
-    void onBegin() override;
-    void onEnd() override;
+
+
+    void setPreviousState(std::string screen) { m_previousScreen = screen; }
+    std::string getPreviousState() { return m_previousScreen; }
+
+    void loadMenu(std::string filename, sf::Vector2u screenSize);
 
 private:
 
-    GameObject m_playButton;
-    GameObject m_play2Button;
-    sf::Font m_font;
-    sf::Text m_playButtonLabel;
-    sf::Text m_playButton2Label;
-    GameObject m_titleImage;
-    sf::Texture m_titleSplash;
+    std::vector<menuButton*> m_buttonList;
 
-    sf::Color m_defaultButtonColour = sf::Color(100, 250, 100, 50);
-    sf::Color m_hoverButtonColour = sf::Color(80, 230, 80, 150);
+    std::string m_previousScreen;
+
+    sf::Text m_title;
+    sf::Font m_font;
 };
 
