@@ -90,3 +90,10 @@ void ScreenLoader::temp()
 	m_bgtilemap.buildLevel();
 
 }
+
+void loadSpriteSheet()
+{
+	//"C:\Users\Marcy\105_solo_project\Coursework\CMP105App\gfx\environment\Layers\back.png"
+	//"C:\Users\Marcy\105_solo_project\Coursework\CMP105App\gfx\environment\Layers\middle.png"
+	//
+}
