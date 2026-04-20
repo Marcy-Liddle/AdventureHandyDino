@@ -6,7 +6,7 @@
 class ScreenLoader
 {
 public :
-	void temp();
+	void create();
 
 	std::vector<int> loadScreen(std::string screen, int blank);
 	

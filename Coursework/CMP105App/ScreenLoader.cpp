@@ -1,6 +1,6 @@
 #include "ScreenLoader.h"
 
-void ScreenLoader::temp()
+void ScreenLoader::create()
 {
 	GameObject tile;
 	std::vector<GameObject> tileSet;
@@ -35,16 +35,6 @@ void ScreenLoader::temp()
 	tileSet.push_back(tile);
 
 	sf::Vector2u mapDimensions{ 40, 8 };
-	std::vector<int> tileMap = {
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b ,  b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b ,  b  , b  , b  , b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b	,  b  , b,	 b,	  b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  ,
-		21 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 25 , 122, 122, 122, 122, 24 , 22 , 22 , 22 , 23 , 21 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 23 ,
-		141, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 143, 141, 142, 142, 142, 142, 142, 142, 142, 143
-	};
 
 
 
@@ -77,9 +67,6 @@ void ScreenLoader::temp()
 	}
 
 	mapDimensions = { 14,5 };
-	tileMap = {
-		//2,2,2,2,2,2,2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,2,2,2,2,2,2, 10,10,10,10,10,10,10,10,10,10,10,10,10,10,	18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18
-	};
 
 	//loadScreen("screen1bg", b);
 	m_bgtilemap.loadTexture("gfx/tilemap-backgrounds.png");
