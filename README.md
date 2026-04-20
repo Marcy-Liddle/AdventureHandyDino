@@ -28,16 +28,16 @@ Adventure of a Handy Dino
    
 ## Must Have Features
 
-* Enemies that move towards the player when they are close and attack to deal damage to the player that can also be damaged, killed & despawned by :
-* The player will have 2 different types of attacks, a melee and a projectile that can be upgraded to deal more damage and break destructable terrain.
-* The player will have a limited amount of health that can be decreased by enemies and traps & increased by pick-ups, and when it reaches 0 the game will allow them to go back to the start / last place they saved.
+* :white_check_mark: Enemies that move towards the player when they are close and attack to deal damage to the player that can also be damaged, killed & despawned by :
+* :heavy_exclamation_mark: The player will have :heavy_check_mark: 2 different types of attacks, a melee and a projectile that can be upgraded to deal more damage and :heavy_exclamation_mark: break destructable terrain.
+*  :white_check_mark: The player will have a limited amount of health that can be decreased by enemies and traps & increased by pick-ups, and when it reaches 0 the game will allow them to go back to the start / last place they saved.
 
 ## Should Have Features
 
-* Metroidvania-like progression system (upgrades for the attacks) as well as movement-based abilities; at least a dash for moving greater distances in any direction; unlocked through pickups hidden throughout the:
-* Game world: Data-driven enviroment consisting of screens with collectables hidden behind obstacles you will need abilities to get through. It shoud also have a limited amount of save points to act as respawn points and record the abilities that the player has currently.
-* At least 1 boss fight to find and defeat with the aid of unlocked abilities to beat the game.
-* The ability to pause the game with a transparent overlay and menu & resume exactly as was before.
+* :x: Metroidvania-like progression system (upgrades for the attacks) as well as movement-based abilities; at least a dash for moving greater distances in any direction; unlocked through pickups hidden throughout the:
+* :heavy_exclamation_mark: Game world: Data-driven enviroment consisting of screens with collectables hidden behind obstacles you will need abilities to get through. It shoud also have a limited amount of save points to act as respawn points and record the abilities that the player has currently.
+* :bangbang: At least 1 boss fight to find and defeat with the aid of unlocked abilities to beat the game.
+* :heavy_exclamation_mark: The ability to pause the game with a transparent overlay and menu & resume exactly as was before.
 * UI that shows: the amount of health the player has left: moved up in priority
 
 ## Could Have Features
