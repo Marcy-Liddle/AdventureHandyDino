@@ -8,7 +8,7 @@ menuButton::menuButton(sf::Vector2f size, sf::Vector2f pos, sf::String lbl, floa
 	setSize(size);
 
 
-	if (!m_font.openFromFile("gfx/fonts/PermanentMarker-Regular.ttf")) std::cerr << "no font";
+	if (!m_font.openFromFile("font/fool.ttf")) std::cerr << "no font";
 	m_label.setFont(m_font);
 	m_label.setString(lbl);
 	m_label.setPosition({ pos.x + labelOffset ,pos.y });
@@ -65,7 +65,7 @@ void menuButton::handleInput(float dt)
 }
 
 
-void menuButton::update(float dt) 
+void menuButton::update(float dt)
 {
 	switch (m_state)
 	{

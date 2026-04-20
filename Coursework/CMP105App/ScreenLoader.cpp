@@ -47,9 +47,11 @@ void ScreenLoader::temp()
 	};
 
 
+
 	m_tilemap.loadTexture("gfx/tilemap.png");
 	m_tilemap.setTileSet(tileSet);
-	m_tilemap.setTileMap(tileMap, mapDimensions);
+	m_tilemap.setTileMap(
+		loadScreen("screen1", b) ,mapDimensions);
 	m_tilemap.setPosition({ 0, 0 });
 	m_tilemap.buildLevel();
 
@@ -76,16 +78,13 @@ void ScreenLoader::temp()
 
 	mapDimensions = { 14,5 };
 	tileMap = {
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		18,18,18,18,18,18,18,18,18,18,18,18,18,18,
-		18,18,18,18,18,18,18,18,18,18,18,18,18,18
+		//2,2,2,2,2,2,2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,2,2,2,2,2,2, 10,10,10,10,10,10,10,10,10,10,10,10,10,10,	18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18
 	};
 
+	//loadScreen("screen1bg", b);
 	m_bgtilemap.loadTexture("gfx/tilemap-backgrounds.png");
 	m_bgtilemap.setTileSet(tileSet);
-	m_bgtilemap.setTileMap(tileMap, mapDimensions);
+	m_bgtilemap.setTileMap(loadScreen("screen1bg", b), mapDimensions);
 	m_bgtilemap.setPosition({ 0, -200 });
 	m_bgtilemap.buildLevel();
 
@@ -96,4 +95,63 @@ void loadSpriteSheet()
 	//"C:\Users\Marcy\105_solo_project\Coursework\CMP105App\gfx\environment\Layers\back.png"
 	//"C:\Users\Marcy\105_solo_project\Coursework\CMP105App\gfx\environment\Layers\middle.png"
 	//
+
+
+}
+
+
+std::vector<int> ScreenLoader::loadScreen(std::string screen, int blank)
+{
+	std::vector<int> loadedTileMap;
+	std::ifstream levelFile("data/screens.csv");
+
+	std::string line, tile;
+
+	if (!levelFile.is_open())
+	{
+		std::cerr << "cant't read level file";
+		return {0};
+	}
+
+	bool levelFound;
+
+	while (std::getline(levelFile, line))
+	{
+		levelFound = false;
+		std::stringstream lineStream(line);
+
+		int i = 0;
+		while (std::getline(lineStream, tile, ','))
+		{
+			if (tile == screen || levelFound == true)
+			{
+				
+				levelFound = true;
+				if (i > 0)
+				{
+					if (tile == "b")
+						loadedTileMap.push_back(blank);
+					else
+						loadedTileMap.push_back(std::stoi(tile));
+				}
+				i += 1;
+				
+			}
+		}
+	}
+	levelFile.close();
+
+	if (loadedTileMap.empty()) {
+		std::cerr << "Could not find " << screen << " in level file." << std::endl;
+	
+	}
+	return loadedTileMap;
+
+}
+
+void ScreenLoader::render(sf::RenderWindow& window)
+{
+	m_bgtilemap.render(window);
+	m_tilemap.render(window);
+
 }

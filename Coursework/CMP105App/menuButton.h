@@ -10,16 +10,16 @@
 //gameObject-based button class for use in the main & pause menu 
 class menuButton :public GameObject
 {
-public: 
+public:
     menuButton(sf::Vector2f pos, sf::Vector2f size, sf::String lbl, float labelOffset, char ID, AudioManager* audio);
     ~menuButton();
 
     void update(float dt) override;
     void handleInput(float dt);
 
+
+    enum class buttonState { ACTIVE, HOVER, SELECTED };
     
-    enum class buttonState { ACTIVE, HOVER, SELECTED};
-   // GameState& m_switchState;
     buttonState m_state = buttonState::ACTIVE;
     GameObject m_buttonObject;
 

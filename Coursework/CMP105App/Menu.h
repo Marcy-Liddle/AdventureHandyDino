@@ -23,7 +23,7 @@ public:
 
 private:
 
-    std::vector<menuButton*> m_buttonList;
+   std::vector<menuButton*> m_buttonList;
 
     std::string m_previousScreen;
 

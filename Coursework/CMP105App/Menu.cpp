@@ -93,9 +93,9 @@ void Menu::render()
 void Menu::loadMenu(std::string menuName, sf::Vector2u screenSize)
 {
 
-	if (!m_font.openFromFile("gfx/fonts/PermanentMarker-Regular.ttf")) std::cerr << "no font";
+	if (!m_font.openFromFile("font/antiquity-print.ttf")) std::cerr << "no font";
 	m_title.setFont(m_font);
-
+	
 	if (menuName == "Main")
 	{
 		m_title.setString("Shepherd of the Cryptid");

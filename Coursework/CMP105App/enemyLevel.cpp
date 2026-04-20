@@ -10,6 +10,7 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 	m_player.setPosition({ 100, 100 });
 	m_player.setAudio(&m_audio);
 
+	/*
 	GameObject tile;
 	std::vector<GameObject> tileSet;
 
@@ -61,6 +62,8 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 	m_tilemap.setPosition({ 0, 0 });
 	m_tilemap.buildLevel();
 
+
+
 	tileSet.clear();
 
 	// setup background
@@ -96,7 +99,9 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 	m_bgtilemap.setTileMap(tileMap, mapDimensions);
 	m_bgtilemap.setPosition({ 0, -200 });
 	m_bgtilemap.buildLevel();
+	*/
 
+	m_screenLoader.temp();
 
 
 	m_enemy.setPosition({ 1082.97,300.5 });
@@ -115,7 +120,7 @@ void enemyLevel::update(float dt)
 	m_enemy.update(dt);
 
 	// handle collisions
-	std::vector<GameObject>& level = *m_tilemap.getLevel();
+	std::vector<GameObject>& level = *m_screenLoader.getLevel();
 	for (auto& t : level)
 	{
 		if (t.isCollider() && Collision::checkBoundingBox(m_player, t))
@@ -191,8 +196,10 @@ void enemyLevel::render()
 {
 	beginDraw();
 
-	m_bgtilemap.render(m_window);
-	m_tilemap.render(m_window);
+	m_screenLoader.render(m_window);
+
+	//m_bgtilemap.render(m_window);
+	//m_tilemap.render(m_window);
 	//m_window.draw(m_player.m_aggroRange);
 	m_window.draw(m_player);
 

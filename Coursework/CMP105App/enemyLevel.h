@@ -5,6 +5,7 @@
 #include "Framework/Collision.h"
 #include "Scene.h"
 #include "enemy1.h"
+#include "ScreenLoader.h"
 
 class enemyLevel :
     public BaseLevel
@@ -20,6 +21,7 @@ public:
 
 private:
 
+    ScreenLoader m_screenLoader;
     TileMap m_tilemap;
     TileMap m_bgtilemap;
     Player m_player;
