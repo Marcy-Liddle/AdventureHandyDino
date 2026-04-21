@@ -96,7 +96,7 @@ void Player::handleInput(float dt)
 	}
 	if (m_input->isPressed(sf::Keyboard::Scancode::F))
 	{
-		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), 4, getPosition());
+		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), m_fireLevel, getPosition());
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
 	}

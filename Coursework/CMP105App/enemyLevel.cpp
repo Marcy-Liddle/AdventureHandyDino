@@ -13,7 +13,11 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 
 	m_screenLoader.create();
 
-
+	m_test.setPosition({300,300});
+	m_test.setSize({ 72,72 });
+	m_test.setCollisionBox({ {0,0}, {72,72} });
+	m_test.setFillColor(sf::Color::Green);
+	
 	m_enemy.setPosition({ 1082.97,300.5 });
 }
 
@@ -49,7 +53,10 @@ void enemyLevel::update(float dt)
 			{
 				m_player.m_projectiles[i]->collisionResponse();
 			}
-
+			if (m_test.isAlive() && Collision::checkBoundingBox(m_test, *m_player.m_projectiles[i]))
+			{
+				m_test.collisionResponse(*m_player.m_projectiles[i]);
+			}
 		}
 	}
 
@@ -71,7 +78,7 @@ void enemyLevel::update(float dt)
 
 		if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, m_enemy))
 			{
-				m_enemy.healAndDeal(-100.f);
+				m_enemy.healAndDeal(-5.f * m_player.getKickLevel());
 			}
 		
 			
@@ -120,5 +127,8 @@ void enemyLevel::render()
 	{
 		if (f->isAlive()) m_window.draw(*f);
 	}
+	if (m_test.isAlive())
+		m_window.draw(m_test);
+
 	endDraw();
 }

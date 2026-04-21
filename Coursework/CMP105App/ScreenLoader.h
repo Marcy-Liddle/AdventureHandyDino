@@ -2,6 +2,7 @@
 #include "Framework/TileMap.h"
 #include <fstream>
 #include <sstream>
+#include "destructable.h"
 
 class ScreenLoader
 {
