@@ -3,15 +3,17 @@
 Player::Player()
 {
 	if (!m_dinoTexture.loadFromFile("gfx/dino1.png"))
-		std::cerr << "No dino texture. sad \n";
+		Utils::printMsg("No dino texture. sad", MessageType::ERROR);
 	if (!m_fireballTexture.loadFromFile("gfx/fireBall.png"))
-		std::cerr << "Fire texture got put out\n";
+		Utils::printMsg("Fire texture got put out.", MessageType::ERROR);
 
 	setTexture(&m_dinoTexture);
 	// Dino is 24x24, tiles are 18x18
 	// LCM(18,24) = 72.
 	setSize({ 72,72 });		
-	setPosition({ 24, 100 });
+	m_spawnPoint = { 24,100 };
+
+	setPosition(m_spawnPoint);
 
 	for (int i = 0; i < 4; i++)
 		m_idle.addFrame({{ i * 24, 0 }, { 24, 24} });
@@ -240,7 +242,7 @@ void Player::collisionResponse(GameObject& collider)
 
 void Player::reset()
 {
-	setPosition({ 0, 50 });
+	setPosition(m_spawnPoint);
 	m_velocity = { 0,0 };
 
 	m_currentHealth = MAX_HEALTH;

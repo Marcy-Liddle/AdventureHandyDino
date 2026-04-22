@@ -183,6 +183,8 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="checkPoint.cpp" />
+    <ClCompile Include="consumable.cpp" />
     <ClCompile Include="enemy1.cpp" />
     <ClCompile Include="enemyLevel.cpp" />
     <ClCompile Include="fireBlast.cpp" />
@@ -204,6 +206,8 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="checkPoint.h" />
+    <ClInclude Include="consumable.h" />
     <ClInclude Include="enemy1.h" />
     <ClInclude Include="enemyLevel.h" />
     <ClInclude Include="fireBlast.h" />
@@ -221,6 +225,7 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScreenLoader.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

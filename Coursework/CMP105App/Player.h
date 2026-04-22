@@ -1,7 +1,7 @@
 #pragma once
 #include "Framework/GameObject.h"
 
-#include <iostream>
+#include "Utils.h"
 #include "Framework/AudioManager.h"
 #include "Character.h"
 #include "fireBlast.h"
@@ -34,6 +34,8 @@ public:
     int getFireLevel() { return m_fireLevel; };
     void fireLevelUp(int level) { m_fireLevel = level; };
 
+    void setRespawn(sf::Vector2f respawn) { m_spawnPoint = respawn; };
+
     GameObject m_aggroRange;
     GameObject m_meleeHitBox;
 
@@ -53,6 +55,7 @@ private:
     Animation m_kick;
     Animation m_hazardKick;
 
+    sf::Vector2f m_spawnPoint;
 
     sf::Vector2f m_accel;
     float m_sprintTimer = 0.f;

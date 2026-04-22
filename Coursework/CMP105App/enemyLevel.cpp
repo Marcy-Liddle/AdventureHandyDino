@@ -11,14 +11,14 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 	m_player.setAudio(&m_audio);
 
 
-	m_screenLoader.create();
+	m_screenLoader.create("screen1");
 
 	m_test.setPosition({300,300});
 	m_test.setSize({ 72,72 });
 	m_test.setCollisionBox({ {0,0}, {72,72} });
 	m_test.setFillColor(sf::Color::Green);
 	
-	m_enemy.setPosition({ 1082.97,300.5 });
+	//m_enemy.setPosition({  });
 }
 
 void enemyLevel::handleInput(float dt) 
@@ -32,6 +32,12 @@ void enemyLevel::update(float dt)
 {
 	m_player.update(dt);
 	m_enemy.update(dt);
+
+	for (auto& t : m_screenLoader.m_enemies)
+	{
+		t->update(dt);
+	}
+
 
 	// handle collisions
 	std::vector<GameObject>& level = *m_screenLoader.getLevel();
@@ -55,7 +61,7 @@ void enemyLevel::update(float dt)
 			}
 			if (m_test.isAlive() && Collision::checkBoundingBox(m_test, *m_player.m_projectiles[i]))
 			{
-				m_test.collisionResponse(*m_player.m_projectiles[i]);
+				m_test.collisionResponse(*m_player.m_projectiles[i], m_player.getFireLevel());
 			}
 		}
 	}

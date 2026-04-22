@@ -17,22 +17,30 @@ public:
     void clearPlayerPointer() { m_playerPointer = nullptr;  };
     GameObject* getPlayerPointer() { return m_playerPointer; };
 
+    void setSpawnPoint(sf::Vector2f pos) { m_spawnPoint = pos; };
+    void respawn() { setPosition(m_spawnPoint); setAlive(true); };
+    void setDamage(int dmg) { m_damage = dmg; }
+    int getDamage() { return m_damage; };
+
+    Animation m_idle;
+    Animation m_active;
+
 private:
 
-    sf::Texture spr_idleSheet;
-    sf::Texture spr_activeSheet;
+    sf::Texture m_idleSheet;
+
     
     
-    Animation anim_idle;
-    Animation anim_active;
-    Animation* anim_current;
+
+    Animation* m_currAnim;
 
     std::vector<sf::Vector2f> m_idlePoints;
     int m_pointIndex;
     float m_waitAtPoint = 0;
     bool m_isWaiting;
-
-    sf::Vector2f m_spawnPoint = { 1382.97,301.5 };
+      
+    int m_damage;
+    sf::Vector2f m_spawnPoint;
 
     GameObject* m_playerPointer;
 
