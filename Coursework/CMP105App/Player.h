@@ -5,9 +5,16 @@
 #include "Framework/AudioManager.h"
 #include "Character.h"
 #include "fireBlast.h"
+#include <map>
 
+enum class playerState
+{
+    NEUTRAL,
+    JUMPING,
+    DASHING,
+    CLIMBING
 
-
+};
 class Player :
     public Character
 {
@@ -45,6 +52,7 @@ private:
     sf::Texture m_dinoTexture;
     sf::Texture m_fireballTexture;
 
+    std::map<std::string, bool> m_abilities;
 
     Animation* m_currAnim;
     Animation* m_prevAnim;
@@ -81,7 +89,7 @@ private:
 
 
     const float SPRINT_COOLDOWN = 2.0f;
-    const float SPRINT_SPEED_MULT = 2.5f;
+    const float SPRINT_SPEED_MULT = 1.5f;
     const float SPEED = 10.0f;
     const float GRAVITY = 50.0f;
     const float COEFF_OF_REST = 0.8f;
@@ -91,6 +99,7 @@ private:
     const float JUMP_FORCE = 15.0f;
     const float SPRINT_ANIM_THRESHOLD = 1.2f * SPEED;
     const float ACTIVATE_RANGE_SQUARED = 700.0f;
+    const float DASH_SPEED = 25.0f;
     
 };
 

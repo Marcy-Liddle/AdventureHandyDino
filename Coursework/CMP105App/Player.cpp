@@ -60,18 +60,26 @@ Player::Player()
 	m_aggroRange.setFillColor(sf::Color::Magenta); //debug
 
 	setCurrentHealth(getMaxHealth());
+	m_isGrounded = true;
+	m_kickLevel = 1;
+	m_fireLevel = 1;
+	m_abilities = { {"dash", true} };
 
 }
 
 void Player::handleInput(float dt)
 {
 	m_accel = { 0,0 };
+	sf::Vector2i inputDir = { 0,0 };
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::H))
 		m_isKicking = true;
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::A))
-		m_accel.x -= SPEED;
+		inputDir.x =  -1; 
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::D))
-		m_accel.x += SPEED;
+		inputDir.x = 1; 
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::Space) && m_isGrounded)
 	{
 		m_velocity.y = - JUMP_FORCE;
@@ -102,6 +110,46 @@ void Player::handleInput(float dt)
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
 	}
+	if (m_abilities["dash"] && m_input->isPressed(sf::Keyboard::Scancode::L))
+	{
+
+		
+
+		if (m_input->isPressed(sf::Keyboard::Scancode::W))
+		{
+
+			inputDir.y = -1;
+		}
+		
+		else if (m_input->isPressed(sf::Keyboard::Scancode::S))
+		{
+
+			inputDir.y = 1;
+		}
+		else
+		{
+			if (inputDir.x == 0)
+			{
+				switch (m_currAnim->getFlipped())
+				{
+					case true:  inputDir.x = -1;   break;
+					case false: inputDir.x = 1; break;
+				}
+			}
+
+		//	Utils::printMsg("no w/d", MessageType::DEBUG);
+			inputDir.y = 0;
+		}
+
+		m_velocity += {inputDir.x * DASH_SPEED, inputDir.y * DASH_SPEED };
+		//std::string str = std::to_string(inputDir.x) + "," + std::to_string(inputDir.x) + " -> " + std::to_string(m_accel.x) + "," + std::to_string(m_accel.y);
+		//Utils::printMsg(str, MessageType::SUCCESS);
+	}
+	else
+	{
+		m_accel.x += (SPEED * inputDir.x);
+	}
+
 
 	// for debugging: "Where am I?"
 	if (m_input->isPressed(sf::Keyboard::Scancode::T))
@@ -136,6 +184,7 @@ void Player::update(float dt)
 
 
 	// newtonian model
+	
 	m_accel.y += GRAVITY;
 	m_velocity += dt * m_accel;
 	if (m_isGrounded && abs(m_accel.x) < 1.f) m_velocity *= DRAG_FACTOR;

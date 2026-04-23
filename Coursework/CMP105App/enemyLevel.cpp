@@ -7,7 +7,7 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 	// setup player 
 	m_player.setInput(&m_input);
 	m_player.setEdges(0, WORLD_SIZE.x);
-	m_player.setPosition({ 100, 100 });
+	m_player.setPosition({ 100, 400 });
 	m_player.setAudio(&m_audio);
 
 
