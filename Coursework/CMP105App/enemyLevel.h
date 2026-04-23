@@ -26,11 +26,11 @@ private:
     TileMap m_bgtilemap;
     Player m_player;
 
-    enemy1 m_enemy;
+   // enemy1 m_enemy;
 
     const sf::Vector2i WORLD_SIZE = { 2880, 648 };
     const sf::Vector2i VIEW_SIZE = { 1296, 648 };
 
-    destructable m_test;
+   // destructable m_test;
 };
 

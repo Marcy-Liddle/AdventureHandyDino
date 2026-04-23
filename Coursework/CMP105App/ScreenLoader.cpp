@@ -150,7 +150,6 @@ std::vector<int> ScreenLoader::loadScreen(std::string screen)
 
 void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 {
-	std::vector<int> loadedTileMap;
 	std::ifstream levelFile("data/screens.csv");
 
 	std::string line, tile;
@@ -194,6 +193,9 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newEnemy->m_idle.addFrame({ { i * 24, 0 }, { 24, 24} });
 
 				newEnemy->m_idle.setFrameSpeed(1.f / 4.f);
+				
+				std::cout << " Created Enemy " << entityData[3] << "at " << newEnemy->getPosition().x << "," << newEnemy->getPosition().y <<"\n";
+
 				m_enemies.push_back(newEnemy);
 			}
 
@@ -201,6 +203,9 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 			{
 				checkPoint* newCheckPoint = new checkPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
 				newCheckPoint->setFillColor(sf::Color::Yellow);
+				newCheckPoint->setSize({ 72,72 });
+				std::cout << "CheckPoint at " << newCheckPoint->getPosition().x << "," << newCheckPoint->getPosition().y << "\n";
+
 				m_checkPoints.push_back(newCheckPoint);
 			}
 			else if (entityType == "Consumable")
@@ -210,6 +215,10 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					consumable* newHealthPickup = new consumable('h', entityData[2]);
 					newHealthPickup->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
 					newHealthPickup->setFillColor(sf::Color::Red);
+					newHealthPickup->setSize({ 72,72 });
+					std::cout << "consumable " << entityData[1]  << " " << entityData[2] << " at " << newHealthPickup->getPosition().x << ", " << newHealthPickup->getPosition().y << "\n";
+
+
 					m_consumables.push_back(newHealthPickup);
 				}
 				
@@ -223,6 +232,11 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newDistructable->setStrenght(std::stoi(entityData[2]));
 					newDistructable->setPosition({ std::stof(entityData[3]), std::stof(entityData[4]) });
 					newDistructable->setFillColor(sf::Color::Green);
+					newDistructable->setSize({ 72,72 });
+					std::cout << "obstacle " << entityData[1] << " " << entityData[2] << " at " << newDistructable->getPosition().x << ", " << newDistructable->getPosition().y << "\n";
+
+
+
 					m_destructables.push_back(newDistructable);
 				}
 			
@@ -262,9 +276,9 @@ void ScreenLoader::render(sf::RenderWindow& window)
 		if (c->isAlive()) window.draw(*c);
 	}
 
-	for (auto s : m_enemies)
+	for (auto e : m_enemies)
 	{
-		if (s->isAlive()) window.draw(*s);
+		if (e->isAlive()) window.draw(*e);
 	}
 
 
