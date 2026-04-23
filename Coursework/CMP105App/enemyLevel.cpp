@@ -105,7 +105,10 @@ void enemyLevel::update(float dt)
 
 		for (auto c : m_screenLoader.m_consumables)
 		{
-			
+			if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+			{
+				c->consume(&m_player);
+			}
 		}
 
 	}

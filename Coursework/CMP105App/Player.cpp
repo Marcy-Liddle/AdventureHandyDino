@@ -63,8 +63,7 @@ Player::Player()
 	m_isGrounded = true;
 	m_kickLevel = 1;
 	m_fireLevel = 1;
-	m_abilities = { {"dash", true} };
-
+	
 }
 
 void Player::handleInput(float dt)
@@ -86,12 +85,7 @@ void Player::handleInput(float dt)
 		m_isGrounded = false;	// can't be jumping if we're in the air
 		m_audio->playSoundbyName("jump");
 	}
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Space) && !m_isGrounded && m_canDoubleJump && !m_hasDoubleJumped)
-	{
-		m_velocity.y = - JUMP_FORCE;
-		m_hasDoubleJumped = true;
-		m_audio->playSoundbyName("jump");
-	}
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::R))	// Reset (for debugging)
 	{
 		reset();
@@ -110,25 +104,37 @@ void Player::handleInput(float dt)
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
 	}
-	if (m_abilities["dash"] && m_input->isPressed(sf::Keyboard::Scancode::L))
+	if (m_abilities["dash"] && m_numberOfDashes >0  && m_input->isPressed(sf::Keyboard::Scancode::L))
 	{
 
-		
 
-		if (m_input->isPressed(sf::Keyboard::Scancode::W))
+		if (m_input->isPressed(sf::Keyboard::Scancode::A))
 		{
 
-			inputDir.y = -1;
+			inputDir.x = -1;
+		}
+
+		else if (m_input->isPressed(sf::Keyboard::Scancode::D))
+		{
+
+			inputDir.x = 1;
+		}
+
+
+		if (m_input->isKeyDown(sf::Keyboard::Scancode::W))
+		{
+
+ 			inputDir.y = -1;
 		}
 		
-		else if (m_input->isPressed(sf::Keyboard::Scancode::S))
+		else if (m_input->isKeyDown(sf::Keyboard::Scancode::S))
 		{
 
 			inputDir.y = 1;
 		}
 		else
 		{
-			if (inputDir.x == 0)
+			if (inputDir.x == 0 && inputDir.y == 0)
 			{
 				switch (m_currAnim->getFlipped())
 				{
@@ -140,10 +146,11 @@ void Player::handleInput(float dt)
 		//	Utils::printMsg("no w/d", MessageType::DEBUG);
 			inputDir.y = 0;
 		}
-
+	
 		m_velocity += {inputDir.x * DASH_SPEED, inputDir.y * DASH_SPEED };
-		//std::string str = std::to_string(inputDir.x) + "," + std::to_string(inputDir.x) + " -> " + std::to_string(m_accel.x) + "," + std::to_string(m_accel.y);
-		//Utils::printMsg(str, MessageType::SUCCESS);
+		m_numberOfDashes -= 1;
+		std::string str = std::to_string(inputDir.x) + "," + std::to_string(inputDir.y) + " -> " + std::to_string(m_velocity.x) + "," + std::to_string(m_velocity.y);
+		Utils::printMsg(str, MessageType::SUCCESS);
 	}
 	else
 	{
@@ -277,7 +284,8 @@ void Player::collisionResponse(GameObject& collider)
 			move({ 0, -overlap->size.y });
 			m_velocity.y = 0;       // Stop falling
 			m_isGrounded = true;    // Enable jumping
-			m_hasDoubleJumped = false;	// more jumping possible
+			m_numberOfDashes = 3;
+	
 		}
 		else
 		{

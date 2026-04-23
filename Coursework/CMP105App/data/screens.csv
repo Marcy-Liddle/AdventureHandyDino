@@ -1,15 +1,14 @@
-screen1,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,22,b,b,b,b,b,b,b,b,22,22,22,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22
+screen1,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,22,b,b,b,b,b,b,b,b,22,22,22,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,22,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,22,23,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,23,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22
 screen1bg,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,10,10,10,10,10,10,10,10,10,10,10,10,10,10,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18
 screen1Enemy,1152,225,slime
 screen1Enemy,386,441,slime
 screen1Enemy,2000,225,vulture
 screen1Consumable,health,10,2000,441
-screen1Consumable,power,dash,2000,300 
+screen1Consumable,power,dash,1000,700
 screen1CheckPoint,2000,200
 screen1Obstacle,destructable,2,300,300
 screen1Obstacle,trap,10,3500,441
-
-
+screen1Obstacle,barrier,3500,600, 1,2
 
 /*
 defineScreen:, tileMap
@@ -21,4 +20,5 @@ defineCheckPoint:, pos.x, pos.y
 defineObstacle:, type:
 ##############,#######, strength, pos.x, pos.y
 ##############,#######, damage,pos.x, pos.y
+##############,#######,pos.x, pos.y, scale.x, scale.y
 */

@@ -28,7 +28,7 @@ void ScreenLoader::create(std::string screen)
 {
 	
 
-	sf::Vector2u mapDimensions{ 40, 8 };
+	sf::Vector2u mapDimensions{ 40, 11 };
 
 	m_tileSet = createTileset(20, 9, 18,1,4, false);
 	
@@ -169,6 +169,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 
 		int i = 0;
 		std::vector<std::string> entityData;
+
 		while (std::getline(lineStream, tile, ','))
 		{
 	
@@ -178,6 +179,8 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				entityData.push_back(tile);
 			}
 		}
+
+
 		if (!entityData.empty())
 		{
 
@@ -193,9 +196,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newEnemy->m_idle.addFrame({ { i * 24, 0 }, { 24, 24} });
 
 				newEnemy->m_idle.setFrameSpeed(1.f / 4.f);
-				
-				std::cout << " Created Enemy " << entityData[3] << "at " << newEnemy->getPosition().x << "," << newEnemy->getPosition().y <<"\n";
-
+		
 				m_enemies.push_back(newEnemy);
 			}
 
@@ -204,8 +205,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				checkPoint* newCheckPoint = new checkPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
 				newCheckPoint->setFillColor(sf::Color::Yellow);
 				newCheckPoint->setSize({ 72,72 });
-				std::cout << "CheckPoint at " << newCheckPoint->getPosition().x << "," << newCheckPoint->getPosition().y << "\n";
-
+		
 				m_checkPoints.push_back(newCheckPoint);
 			}
 			else if (entityType == "Consumable")
@@ -216,10 +216,18 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newHealthPickup->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
 					newHealthPickup->setFillColor(sf::Color::Red);
 					newHealthPickup->setSize({ 72,72 });
-					std::cout << "consumable " << entityData[1]  << " " << entityData[2] << " at " << newHealthPickup->getPosition().x << ", " << newHealthPickup->getPosition().y << "\n";
-
-
+		
 					m_consumables.push_back(newHealthPickup);
+				}
+				else if (entityData[1] == "power")
+				{
+					consumable* newPowerUp = new consumable('p', entityData[2]);
+					newPowerUp->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
+					newPowerUp->setFillColor(sf::Color(211,3,252));
+					newPowerUp->setSize({ 72,72 });
+					newPowerUp->setCollisionBox({ {0,0} ,{72,72} });
+
+					m_consumables.push_back(newPowerUp);
 				}
 				
 			}
@@ -233,10 +241,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newDistructable->setPosition({ std::stof(entityData[3]), std::stof(entityData[4]) });
 					newDistructable->setFillColor(sf::Color::Green);
 					newDistructable->setSize({ 72,72 });
-					std::cout << "obstacle " << entityData[1] << " " << entityData[2] << " at " << newDistructable->getPosition().x << ", " << newDistructable->getPosition().y << "\n";
-
-
-
+				
 					m_destructables.push_back(newDistructable);
 				}
 			

@@ -30,8 +30,6 @@ public:
    
    
     void reset();
-    void setCanDoubleJump(bool value) { m_canDoubleJump = value; };
-    bool canDoubleJump() { return m_canDoubleJump; };
     void setAudio(AudioManager* audio) { m_audio = audio; };
     bool isAttacking() { return m_isKicking; };
 
@@ -47,6 +45,12 @@ public:
     GameObject m_meleeHitBox;
 
     std::vector<fireBlast*> m_projectiles;
+
+    void addAbility(std::string ability) 
+    { 
+        m_abilities.insert({ ability, true }); 
+        m_abilities[ability] = true;
+    };
 
 private:
     sf::Texture m_dinoTexture;
@@ -74,9 +78,10 @@ private:
     int m_kickLevel = 1;
     int m_fireLevel = 1;
 
-    bool m_canDoubleJump;
-    bool m_hasDoubleJumped;
-    bool m_isKicking = false;
+    bool m_isKicking;
+ 
+    int m_numberOfDashes;
+
 
     sf::FloatRect m_normalHurtBox;
 

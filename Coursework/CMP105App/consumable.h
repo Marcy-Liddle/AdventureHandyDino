@@ -38,10 +38,13 @@ public:
 	{
 		switch (m_id)
 		{
-		case 'h':
-			player->healAndDeal(std::stof(m_gift));
-			break;
-		default: break;
+			case 'h':
+				player->healAndDeal(std::stof(m_gift));
+				break;
+			case 'p':
+				player->addAbility(m_gift);
+				break;
+			default: break;
 		}
 
 		collisionResponse();

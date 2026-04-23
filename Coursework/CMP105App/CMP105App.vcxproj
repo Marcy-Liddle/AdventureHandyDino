@@ -200,6 +200,7 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="menuButton.cpp" />
+    <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ScreenLoader.cpp" />
@@ -222,6 +223,7 @@ sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClInclude Include="Framework\TileMap.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="menuButton.h" />
+    <ClInclude Include="obstacle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScreenLoader.h" />
