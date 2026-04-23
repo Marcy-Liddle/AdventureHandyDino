@@ -1,7 +1,7 @@
 #pragma once
 #include "Framework/GameObject.h"
 
-#include <iostream>
+#include "Utils.h"
 #include "Framework/AudioManager.h"
 #include "Character.h"
 #include "fireBlast.h"
@@ -26,8 +26,15 @@ public:
     void setCanDoubleJump(bool value) { m_canDoubleJump = value; };
     bool canDoubleJump() { return m_canDoubleJump; };
     void setAudio(AudioManager* audio) { m_audio = audio; };
-    bool isAttacking() { return m_isKicking; }
-    
+    bool isAttacking() { return m_isKicking; };
+
+    int getKickLevel() { return m_kickLevel; };
+    void kickLevelUp(int level) { m_kickLevel = level; };
+
+    int getFireLevel() { return m_fireLevel; };
+    void fireLevelUp(int level) { m_fireLevel = level; };
+
+    void setRespawn(sf::Vector2f respawn) { m_spawnPoint = respawn; };
 
     GameObject m_aggroRange;
     GameObject m_meleeHitBox;
@@ -48,6 +55,7 @@ private:
     Animation m_kick;
     Animation m_hazardKick;
 
+    sf::Vector2f m_spawnPoint;
 
     sf::Vector2f m_accel;
     float m_sprintTimer = 0.f;
@@ -55,6 +63,8 @@ private:
     float m_leftEdge;
     float m_rightEdge;
 
+    int m_kickLevel = 1;
+    int m_fireLevel = 1;
 
     bool m_canDoubleJump;
     bool m_hasDoubleJumped;

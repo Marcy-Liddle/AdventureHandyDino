@@ -80,6 +80,7 @@ int main()
 	//Create the window
 	//sf::RenderWindow window(sf::VideoMode({ 432, 432 }), "Dino Handyman", sf::State::Fullscreen);
 	sf::RenderWindow window(sf::VideoMode({ 1296, 864 }), "Dino Handyman");
+	
 	window.setVerticalSyncEnabled(true);
 	
 	// Initialise input and manager objects.

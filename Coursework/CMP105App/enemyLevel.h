@@ -5,6 +5,7 @@
 #include "Framework/Collision.h"
 #include "Scene.h"
 #include "enemy1.h"
+#include "ScreenLoader.h"
 
 class enemyLevel :
     public BaseLevel
@@ -20,13 +21,16 @@ public:
 
 private:
 
+    ScreenLoader m_screenLoader;
     TileMap m_tilemap;
     TileMap m_bgtilemap;
     Player m_player;
 
-    enemy1 m_enemy;
+   // enemy1 m_enemy;
 
     const sf::Vector2i WORLD_SIZE = { 2880, 648 };
-    const sf::Vector2i VIEW_SIZE = { 432, 432 };
+    const sf::Vector2i VIEW_SIZE = { 1296, 648 };
+
+   // destructable m_test;
 };
 

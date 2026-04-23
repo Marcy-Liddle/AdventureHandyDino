@@ -1,18 +1,76 @@
 #include "ScreenLoader.h"
 
-void ScreenLoader::temp()
+
+ScreenLoader::ScreenLoader()
+{
+
+	if (!m_tileSpritesheet.loadFromFile("gfx/tilemap.png"))
+		Utils::printMsg("No bg texture. sad", MessageType::ERROR);
+
+
+	if (!m_bgSpritesheet.loadFromFile("gfx/tilemap-backgrounds.png"))
+		Utils::printMsg("No bg texture. sad", MessageType::ERROR);
+
+	if (!m_slimeSpritesheet.loadFromFile("gfx/characters/enemies/slime/slime_idle.png"))
+		Utils::printMsg("No slime texture. sad", MessageType::ERROR);
+
+	if (!m_vultureSpritesheet.loadFromFile("gfx/characters/enemies/vulture/spritesheets/vulture.png"))
+		Utils::printMsg("No vulture texture. sad", MessageType::ERROR);
+}
+
+
+ScreenLoader::~ScreenLoader()
+{
+
+}
+
+void ScreenLoader::create(std::string screen)
+{
+	
+
+	sf::Vector2u mapDimensions{ 40, 8 };
+
+	m_tileSet = createTileset(20, 9, 18,1,4, false);
+	
+	m_tilemap.setTexture(m_tileSpritesheet);
+	m_tilemap.setTileSet(m_tileSet);
+	m_tilemap.setTileMap(
+		loadScreen("screen1") ,mapDimensions);
+	m_tilemap.setPosition({ 0, 0 });
+	m_tilemap.buildLevel();
+
+
+	mapDimensions = { 14,5 };
+
+	m_bgTileSet = createTileset(8, 3, 24, 1, 9, true);
+	//loadScreen("screen1bg", b);
+	m_bgtilemap.setTexture(m_bgSpritesheet);
+	m_bgtilemap.setTileSet(m_bgTileSet);
+	m_bgtilemap.setTileMap(loadScreen("screen1bg"), mapDimensions);
+	m_bgtilemap.setPosition({ 0, -200 });
+	m_bgtilemap.buildLevel();
+
+
+	loadEntities(screen, "Enemy");
+
+	loadEntities(screen, "Consumable");
+
+	loadEntities(screen, "CheckPoint");
+
+	loadEntities(screen, "Obstacle");
+
+	
+}
+
+std::vector<GameObject>  ScreenLoader::createTileset( int num_columns, int num_rows, int size, int spacing, int scale, bool isBackground)
 {
 	GameObject tile;
 	std::vector<GameObject> tileSet;
 
-	int num_columns = 20;
-	int num_rows = 9;
-	int tile_size = 18;      // Visual size of the tile
-	int sheet_spacing = 1;   // Gap between tiles
 
 	// Set GameObject size (Scaling up 4x for visibility)
 	// 4 * 18 = 3 * 24 = 72 (dino size is 24).
-	tile.setSize(sf::Vector2f(tile_size * 4, tile_size * 4));
+	tile.setSize(sf::Vector2f(size * scale, size * scale));
 	tile.setCollisionBox({ { 0,0 }, tile.getSize() });
 
 	for (int i = 0; i < num_columns * num_rows; i++)
@@ -20,73 +78,208 @@ void ScreenLoader::temp()
 		int row = i / num_columns;
 		int col = i % num_columns;
 		tile.setTextureRect({
-			{(tile_size + sheet_spacing) * col, (tile_size + sheet_spacing) * row},
-			{tile_size, tile_size} });
-		if (col <= 4 || col >= 12) tile.setCollider(true);
+			{(size + spacing) * col, (size + spacing) * row},
+			{size, size} });
+		if (!isBackground && (col <= 4 || col >= 12))
+			tile.setCollider(true);
 		else tile.setCollider(false);
 		tileSet.push_back(tile);
 
 	}
-
-	// Add Blank
-	tile.setTextureRect({ {0, 0}, {-24, -24} }); // Empty rect for blank
-	int b = tileSet.size();
-	tile.setCollider(false);
-	tileSet.push_back(tile);
-
-	sf::Vector2u mapDimensions{ 40, 8 };
-	std::vector<int> tileMap = {
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b ,  b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b ,  b  , b  , b  , b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  ,
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b	,  b  , b,	 b,	  b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  ,
-		21 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 25 , 122, 122, 122, 122, 24 , 22 , 22 , 22 , 23 , 21 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 23 ,
-		141, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 143, 141, 142, 142, 142, 142, 142, 142, 142, 143
-	};
-
-
-	m_tilemap.loadTexture("gfx/tilemap.png");
-	m_tilemap.setTileSet(tileSet);
-	m_tilemap.setTileMap(tileMap, mapDimensions);
-	m_tilemap.setPosition({ 0, 0 });
-	m_tilemap.buildLevel();
-
-	tileSet.clear();
-
-	// setup background
-	tile_size = 24;
-	num_columns = 8;
-	num_rows = 3;
-	// 24 * 9 = 216, a multiple of 72, the LCM of the player and tile size.
-	tile.setSize(sf::Vector2f(tile_size * 9, tile_size * 9));
-
-	for (int i = 0; i < num_columns * num_rows; i++)
+	if (!isBackground)
 	{
-		int row = i / num_columns;
-		int col = i % num_columns;
-
-		tile.setTextureRect({
-			{(tile_size + sheet_spacing) * col, (tile_size + sheet_spacing) * row},
-			{tile_size, tile_size} });
-		tile.setCollider(false);		// don't collide with background
+		tile.setTextureRect({ {0, 0}, {-24, -24} }); // Empty rect for blank
+		m_blank = tileSet.size();
+		tile.setCollider(false);
 		tileSet.push_back(tile);
 	}
 
-	mapDimensions = { 14,5 };
-	tileMap = {
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		18,18,18,18,18,18,18,18,18,18,18,18,18,18,
-		18,18,18,18,18,18,18,18,18,18,18,18,18,18
-	};
+	return tileSet;
 
-	m_bgtilemap.loadTexture("gfx/tilemap-backgrounds.png");
-	m_bgtilemap.setTileSet(tileSet);
-	m_bgtilemap.setTileMap(tileMap, mapDimensions);
-	m_bgtilemap.setPosition({ 0, -200 });
-	m_bgtilemap.buildLevel();
+}
+
+std::vector<int> ScreenLoader::loadScreen(std::string screen)
+{
+	std::vector<int> loadedTileMap;
+	std::ifstream levelFile("data/screens.csv");
+
+	std::string line, tile;
+
+	if (!levelFile.is_open())
+	{
+		std::cerr << "cant't read level file";
+		return {0};
+	}
+
+	bool levelFound;
+
+	while (std::getline(levelFile, line))
+	{
+		levelFound = false;
+		std::stringstream lineStream(line);
+
+		int i = 0;
+		while (std::getline(lineStream, tile, ','))
+		{
+			if (tile == screen || levelFound == true)
+			{
+				
+				levelFound = true;
+				if (i > 0)
+				{
+					if (tile == "b")
+						loadedTileMap.push_back(m_blank);
+					else
+						loadedTileMap.push_back(std::stoi(tile));
+				}
+				i += 1;
+				
+			}
+		}
+	}
+	levelFile.close();
+
+	if (loadedTileMap.empty()) {
+		std::cerr << "Could not find " << screen << " in level file." << std::endl;
+	
+	}
+	return loadedTileMap;
+
+}
+
+
+void ScreenLoader::loadEntities(std::string screen, std::string entityType)
+{
+	std::ifstream levelFile("data/screens.csv");
+
+	std::string line, tile;
+
+	if (!levelFile.is_open())
+	{
+		std::cerr << "cant't read level file";
+		return;
+	}
+
+	bool levelFound;
+
+	while (std::getline(levelFile, line))
+	{
+		levelFound = false;
+		std::stringstream lineStream(line);
+
+		int i = 0;
+		std::vector<std::string> entityData;
+		while (std::getline(lineStream, tile, ','))
+		{
+	
+			if (tile == screen + entityType || levelFound == true)
+			{
+				levelFound = true;
+				entityData.push_back(tile);
+			}
+		}
+		if (!entityData.empty())
+		{
+
+			if (entityType == "Enemy" && entityData[3] == "slime")
+			{
+				enemy1* newEnemy = new enemy1;
+				newEnemy->setSpawnPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
+				newEnemy->respawn();
+			
+				newEnemy->setTexture(&m_slimeSpritesheet);
+
+				for (int i = 0; i < 8; i++)
+					newEnemy->m_idle.addFrame({ { i * 24, 0 }, { 24, 24} });
+
+				newEnemy->m_idle.setFrameSpeed(1.f / 4.f);
+				
+				std::cout << " Created Enemy " << entityData[3] << "at " << newEnemy->getPosition().x << "," << newEnemy->getPosition().y <<"\n";
+
+				m_enemies.push_back(newEnemy);
+			}
+
+			else if (entityType == "CheckPoint")
+			{
+				checkPoint* newCheckPoint = new checkPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
+				newCheckPoint->setFillColor(sf::Color::Yellow);
+				newCheckPoint->setSize({ 72,72 });
+				std::cout << "CheckPoint at " << newCheckPoint->getPosition().x << "," << newCheckPoint->getPosition().y << "\n";
+
+				m_checkPoints.push_back(newCheckPoint);
+			}
+			else if (entityType == "Consumable")
+			{
+				if (entityData[1] == "health")
+				{
+					consumable* newHealthPickup = new consumable('h', entityData[2]);
+					newHealthPickup->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
+					newHealthPickup->setFillColor(sf::Color::Red);
+					newHealthPickup->setSize({ 72,72 });
+					std::cout << "consumable " << entityData[1]  << " " << entityData[2] << " at " << newHealthPickup->getPosition().x << ", " << newHealthPickup->getPosition().y << "\n";
+
+
+					m_consumables.push_back(newHealthPickup);
+				}
+				
+			}
+			else if (entityType == "Obstacle")
+			{
+				if (entityData[1] == "destructable")
+				{
+					//assume obstacle = destructable for now
+					destructable* newDistructable = new destructable;
+					newDistructable->setStrenght(std::stoi(entityData[2]));
+					newDistructable->setPosition({ std::stof(entityData[3]), std::stof(entityData[4]) });
+					newDistructable->setFillColor(sf::Color::Green);
+					newDistructable->setSize({ 72,72 });
+					std::cout << "obstacle " << entityData[1] << " " << entityData[2] << " at " << newDistructable->getPosition().x << ", " << newDistructable->getPosition().y << "\n";
+
+
+
+					m_destructables.push_back(newDistructable);
+				}
+			
+
+			}
+	
+
+			
+		}
+
+
+		
+	}
+	levelFile.close();
+
+}
+
+void ScreenLoader::render(sf::RenderWindow& window)
+{
+	m_bgtilemap.render(window);
+	m_tilemap.render(window);
+
+
+	for (auto d : m_destructables)
+	{
+		if (d->isAlive()) window.draw(*d);
+	}
+	
+	for (auto c : m_checkPoints)
+	{
+		if (c->isAlive()) window.draw(*c);
+	}
+
+
+	for (auto c : m_consumables)
+	{
+		if (c->isAlive()) window.draw(*c);
+	}
+
+	for (auto e : m_enemies)
+	{
+		if (e->isAlive()) window.draw(*e);
+	}
+
 
 }
