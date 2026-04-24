@@ -18,6 +18,7 @@ public:
         setAlive(true);
     }
 
+
     void setMaxHealth(float hp) { MAX_HEALTH = hp; };
     float getMaxHealth() { return MAX_HEALTH; };
     void worldCollision(GameObject& collider);

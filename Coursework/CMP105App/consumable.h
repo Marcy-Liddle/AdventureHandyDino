@@ -52,6 +52,8 @@ public:
 
 	void collisionResponse() { setAlive(false); };
 
+
+private:
 	std::string m_gift;
 	char m_id;
 

@@ -6,7 +6,7 @@ public:
 	checkPoint(sf::Vector2f pos) {setPosition(pos);}
 	~checkPoint() {};
 
-	void setSpawn(Player* player) { player->setRespawn(getPosition()); };
+	void setSpawn(Player* player) { player->setRespawn(getPosition());  };
 
 };
 

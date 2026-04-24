@@ -4,11 +4,11 @@ screen1Enemy,1152,225,slime
 screen1Enemy,386,441,slime
 screen1Enemy,2000,225,vulture
 screen1Consumable,health,10,2000,441
-screen1Consumable,power,dash,1000,700
+screen1Consumable,power,dash,600,700
 screen1CheckPoint,2000,200
 screen1Obstacle,destructable,2,300,300
-screen1Obstacle,trap,10,3500,441
-screen1Obstacle,barrier,3500,600, 1,2
+NOTscreen1Obstacle,trap,10,3500,441
+screen1Obstacle,barrier,800,350, 1,5
 
 /*
 defineScreen:, tileMap

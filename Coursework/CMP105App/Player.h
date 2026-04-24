@@ -52,6 +52,8 @@ public:
         m_abilities[ability] = true;
     };
 
+    bool isDashing() { return m_isDashing; };
+
 private:
     sf::Texture m_dinoTexture;
     sf::Texture m_fireballTexture;
@@ -81,7 +83,8 @@ private:
     bool m_isKicking;
  
     int m_numberOfDashes;
-
+    bool m_isDashing = false;
+    float m_dashCooldown = 0.f;
 
     sf::FloatRect m_normalHurtBox;
 
@@ -105,7 +108,7 @@ private:
     const float SPRINT_ANIM_THRESHOLD = 1.2f * SPEED;
     const float ACTIVATE_RANGE_SQUARED = 700.0f;
     const float DASH_SPEED = 25.0f;
-    
+    const float DASH_COOLDOWN = 0.35f;
 };
 
 

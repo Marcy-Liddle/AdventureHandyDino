@@ -137,6 +137,8 @@ std::vector<int> ScreenLoader::loadScreen(std::string screen)
 			}
 		}
 	}
+
+
 	levelFile.close();
 
 	if (loadedTileMap.empty()) {
@@ -172,7 +174,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 
 		while (std::getline(lineStream, tile, ','))
 		{
-	
+
 			if (tile == screen + entityType || levelFound == true)
 			{
 				levelFound = true;
@@ -189,14 +191,14 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				enemy1* newEnemy = new enemy1;
 				newEnemy->setSpawnPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
 				newEnemy->respawn();
-			
+
 				newEnemy->setTexture(&m_slimeSpritesheet);
 
 				for (int i = 0; i < 8; i++)
 					newEnemy->m_idle.addFrame({ { i * 24, 0 }, { 24, 24} });
 
 				newEnemy->m_idle.setFrameSpeed(1.f / 4.f);
-		
+
 				m_enemies.push_back(newEnemy);
 			}
 
@@ -205,7 +207,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				checkPoint* newCheckPoint = new checkPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
 				newCheckPoint->setFillColor(sf::Color::Yellow);
 				newCheckPoint->setSize({ 72,72 });
-		
+				newCheckPoint->setCollisionBox({ {0,0 }, { 72,72 } });
 				m_checkPoints.push_back(newCheckPoint);
 			}
 			else if (entityType == "Consumable")
@@ -216,20 +218,20 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newHealthPickup->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
 					newHealthPickup->setFillColor(sf::Color::Red);
 					newHealthPickup->setSize({ 72,72 });
-		
+
 					m_consumables.push_back(newHealthPickup);
 				}
 				else if (entityData[1] == "power")
 				{
 					consumable* newPowerUp = new consumable('p', entityData[2]);
 					newPowerUp->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
-					newPowerUp->setFillColor(sf::Color(211,3,252));
+					newPowerUp->setFillColor(sf::Color(211, 3, 252));
 					newPowerUp->setSize({ 72,72 });
 					newPowerUp->setCollisionBox({ {0,0} ,{72,72} });
 
 					m_consumables.push_back(newPowerUp);
 				}
-				
+
 			}
 			else if (entityType == "Obstacle")
 			{
@@ -241,21 +243,33 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newDistructable->setPosition({ std::stof(entityData[3]), std::stof(entityData[4]) });
 					newDistructable->setFillColor(sf::Color::Green);
 					newDistructable->setSize({ 72,72 });
-				
+
 					m_destructables.push_back(newDistructable);
 				}
-			
+				else if (entityData[1] == "barrier")
+				{
+					obstacle* newObstacle = new obstacle('b', entityData[1]);
+					newObstacle->setPosition({ std::stof(entityData[2]) , std::stof(entityData[3]) });
+					newObstacle->setSize({ 72 * std::stof(entityData[4]),  72 * std::stof(entityData[5]) });
+					newObstacle->setCollisionBox({ {0,0}, newObstacle->getSize() });
+					newObstacle->setFillColor(sf::Color(255, 0, 140));
+
+					m_obstacles.push_back(newObstacle);
+				}
+
+
 
 			}
-	
 
-			
+
+
 		}
-
-
 		
+
 	}
+
 	levelFile.close();
+
 
 }
 
@@ -286,5 +300,9 @@ void ScreenLoader::render(sf::RenderWindow& window)
 		if (e->isAlive()) window.draw(*e);
 	}
 
+	for (auto o : m_obstacles)
+	{
+		if (o->isAlive()) window.draw(*o);
+	}
 
 }

@@ -104,34 +104,19 @@ void Player::handleInput(float dt)
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
 	}
-	if (m_abilities["dash"] && m_numberOfDashes >0  && m_input->isPressed(sf::Keyboard::Scancode::L))
+	if (m_abilities["dash"]  && !m_isDashing && m_numberOfDashes >0  && m_input->isPressed(sf::Keyboard::Scancode::L))
 	{
-
-
+		m_isDashing = true;
 		if (m_input->isPressed(sf::Keyboard::Scancode::A))
-		{
-
 			inputDir.x = -1;
-		}
-
+	
 		else if (m_input->isPressed(sf::Keyboard::Scancode::D))
-		{
-
 			inputDir.x = 1;
-		}
-
 
 		if (m_input->isKeyDown(sf::Keyboard::Scancode::W))
-		{
-
- 			inputDir.y = -1;
-		}
-		
+			inputDir.y = -1;
 		else if (m_input->isKeyDown(sf::Keyboard::Scancode::S))
-		{
-
 			inputDir.y = 1;
-		}
 		else
 		{
 			if (inputDir.x == 0 && inputDir.y == 0)
@@ -142,9 +127,7 @@ void Player::handleInput(float dt)
 					case false: inputDir.x = 1; break;
 				}
 			}
-
-		//	Utils::printMsg("no w/d", MessageType::DEBUG);
-			inputDir.y = 0;
+			
 		}
 	
 		m_velocity += {inputDir.x * DASH_SPEED, inputDir.y * DASH_SPEED };
@@ -181,6 +164,16 @@ void Player::update(float dt)
 		if (f->isAlive()) f->update(dt);
 	}
 
+	if (m_isDashing)
+	{
+		m_dashCooldown += dt;
+		if (m_dashCooldown >= DASH_COOLDOWN)
+		{
+			m_isDashing = false;
+			m_dashCooldown = 0;
+			
+		}
+	}
 
 	float radius = getSize().x / 2.f;
 	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
