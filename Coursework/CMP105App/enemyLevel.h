@@ -17,6 +17,8 @@ public:
     void update(float dt) override;
     void render() override;
 
+    void handleCollision();
+
     void updateCameraAndBackground();
 
 private:

@@ -7,7 +7,7 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 	// setup player 
 	m_player.setInput(&m_input);
 	m_player.setEdges(0, WORLD_SIZE.x);
-	m_player.setPosition({ 100, 100 });
+	m_player.setPosition({ 100, 400 });
 	m_player.setAudio(&m_audio);
 
 
@@ -34,6 +34,16 @@ void enemyLevel::update(float dt)
 	}
 
 
+	handleCollision();
+
+	updateCameraAndBackground();
+}
+
+
+
+
+void enemyLevel::handleCollision()
+{
 	// handle collisions
 	std::vector<GameObject>& level = *m_screenLoader.getLevel();
 	for (auto& t : level)
@@ -42,6 +52,7 @@ void enemyLevel::update(float dt)
 		{
 			m_player.collisionResponse(t);
 		}
+
 		for (auto& e : m_screenLoader.m_enemies)
 		{
 			if (t.isCollider() && Collision::checkBoundingBox(*e, t))
@@ -49,7 +60,7 @@ void enemyLevel::update(float dt)
 				e->collisionResponse(t);
 			}
 		}
-		
+
 
 		for (int i = 0; i < m_player.m_projectiles.size(); i++)
 		{
@@ -57,7 +68,7 @@ void enemyLevel::update(float dt)
 			{
 				m_player.m_projectiles[i]->collisionResponse();
 			}
-		
+
 		}
 	}
 
@@ -92,29 +103,52 @@ void enemyLevel::update(float dt)
 			e->clearPlayerPointer();
 		}
 
-		for (auto d : m_screenLoader.m_destructables)
-		{
-		
-		}
-
-		for (auto c : m_screenLoader.m_checkPoints)
-		{
-		
-		}
-
-
-		for (auto c : m_screenLoader.m_consumables)
-		{
-			
-		}
 
 	}
 
 
+	for (auto d : m_screenLoader.m_destructables)
+	{
+		for (int i = 0; i < m_player.m_projectiles.size(); i++)
+		{
+			if (Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
+			{
+				m_player.m_projectiles[i]->collisionResponse();
+				d->collisionResponse(m_player.m_projectiles[i]->getDamage());
+			}
 
-	
-	updateCameraAndBackground();
+		}
+	}
+
+	for (auto c : m_screenLoader.m_checkPoints)
+	{
+		if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+		{
+			c->setSpawn(&m_player);
+
+		}
+	}
+
+
+	for (auto o : m_screenLoader.m_obstacles)
+	{
+		if (o->isAlive() && Collision::checkBoundingBox(m_player, *o))
+		{
+			o->obstacleInteract(&m_player);
+		}
+
+	}
+
+		for (auto c : m_screenLoader.m_consumables)
+		{
+
+			if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+			{
+				c->consume(&m_player);
+			}
+		}
 }
+
 
 
 void enemyLevel::updateCameraAndBackground()
@@ -133,6 +167,9 @@ void enemyLevel::updateCameraAndBackground()
 
 	m_bgtilemap.setPosition({ player_pos.x - halfViewWidth, 0 });
 }
+
+
+
 
 void enemyLevel::render()
 {

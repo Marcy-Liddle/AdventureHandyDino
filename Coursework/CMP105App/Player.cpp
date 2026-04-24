@@ -60,30 +60,32 @@ Player::Player()
 	m_aggroRange.setFillColor(sf::Color::Magenta); //debug
 
 	setCurrentHealth(getMaxHealth());
-
+	m_isGrounded = true;
+	m_kickLevel = 1;
+	m_fireLevel = 1;
+	
 }
 
 void Player::handleInput(float dt)
 {
 	m_accel = { 0,0 };
+	sf::Vector2i inputDir = { 0,0 };
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::H))
 		m_isKicking = true;
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::A))
-		m_accel.x -= SPEED;
+		inputDir.x =  -1; 
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::D))
-		m_accel.x += SPEED;
+		inputDir.x = 1; 
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::Space) && m_isGrounded)
 	{
 		m_velocity.y = - JUMP_FORCE;
 		m_isGrounded = false;	// can't be jumping if we're in the air
 		m_audio->playSoundbyName("jump");
 	}
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Space) && !m_isGrounded && m_canDoubleJump && !m_hasDoubleJumped)
-	{
-		m_velocity.y = - JUMP_FORCE;
-		m_hasDoubleJumped = true;
-		m_audio->playSoundbyName("jump");
-	}
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::R))	// Reset (for debugging)
 	{
 		reset();
@@ -102,6 +104,42 @@ void Player::handleInput(float dt)
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
 	}
+	if (m_abilities["dash"]  && !m_isDashing && m_numberOfDashes >0  && m_input->isPressed(sf::Keyboard::Scancode::L))
+	{
+		m_isDashing = true;
+		if (m_input->isPressed(sf::Keyboard::Scancode::A))
+			inputDir.x = -1;
+	
+		else if (m_input->isPressed(sf::Keyboard::Scancode::D))
+			inputDir.x = 1;
+
+		if (m_input->isKeyDown(sf::Keyboard::Scancode::W))
+			inputDir.y = -1;
+		else if (m_input->isKeyDown(sf::Keyboard::Scancode::S))
+			inputDir.y = 1;
+		else
+		{
+			if (inputDir.x == 0 && inputDir.y == 0)
+			{
+				switch (m_currAnim->getFlipped())
+				{
+					case true:  inputDir.x = -1;   break;
+					case false: inputDir.x = 1; break;
+				}
+			}
+			
+		}
+	
+		m_velocity += {inputDir.x * DASH_SPEED, inputDir.y * DASH_SPEED };
+		m_numberOfDashes -= 1;
+		std::string str = std::to_string(inputDir.x) + "," + std::to_string(inputDir.y) + " -> " + std::to_string(m_velocity.x) + "," + std::to_string(m_velocity.y);
+		Utils::printMsg(str, MessageType::SUCCESS);
+	}
+	else
+	{
+		m_accel.x += (SPEED * inputDir.x);
+	}
+
 
 	// for debugging: "Where am I?"
 	if (m_input->isPressed(sf::Keyboard::Scancode::T))
@@ -126,6 +164,16 @@ void Player::update(float dt)
 		if (f->isAlive()) f->update(dt);
 	}
 
+	if (m_isDashing)
+	{
+		m_dashCooldown += dt;
+		if (m_dashCooldown >= DASH_COOLDOWN)
+		{
+			m_isDashing = false;
+			m_dashCooldown = 0;
+			
+		}
+	}
 
 	float radius = getSize().x / 2.f;
 	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
@@ -136,6 +184,7 @@ void Player::update(float dt)
 
 
 	// newtonian model
+	
 	m_accel.y += GRAVITY;
 	m_velocity += dt * m_accel;
 	if (m_isGrounded && abs(m_accel.x) < 1.f) m_velocity *= DRAG_FACTOR;
@@ -228,7 +277,8 @@ void Player::collisionResponse(GameObject& collider)
 			move({ 0, -overlap->size.y });
 			m_velocity.y = 0;       // Stop falling
 			m_isGrounded = true;    // Enable jumping
-			m_hasDoubleJumped = false;	// more jumping possible
+			m_numberOfDashes = 3;
+	
 		}
 		else
 		{
