@@ -39,7 +39,9 @@ public:
 		switch (m_id)
 		{
 			case 'h':
+				Utils::printMsg("Player health = " + std::to_string(player->getCurrentHealth()) , MessageType::SUCCESS);
 				player->healAndDeal(std::stof(m_gift));
+				Utils::printMsg("Healed Player for " + m_gift + ", player health = " + std::to_string(player->getCurrentHealth()) , MessageType::SUCCESS);
 				break;
 			case 'p':
 				player->addAbility(m_gift);

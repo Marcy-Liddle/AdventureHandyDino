@@ -218,7 +218,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newHealthPickup->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
 					newHealthPickup->setFillColor(sf::Color::Red);
 					newHealthPickup->setSize({ 72,72 });
-
+					newHealthPickup->setCollisionBox({ {0,0} , {72,72} });
 					m_consumables.push_back(newHealthPickup);
 				}
 				else if (entityData[1] == "power")
@@ -244,6 +244,8 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newDistructable->setFillColor(sf::Color::Green);
 					newDistructable->setSize({ 72,72 });
 
+					newDistructable->setCollisionBox({ {0,0} , {72,72} });
+
 					m_destructables.push_back(newDistructable);
 				}
 				else if (entityData[1] == "barrier")
@@ -253,6 +255,16 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newObstacle->setSize({ 72 * std::stof(entityData[4]),  72 * std::stof(entityData[5]) });
 					newObstacle->setCollisionBox({ {0,0}, newObstacle->getSize() });
 					newObstacle->setFillColor(sf::Color(255, 0, 140));
+
+					m_obstacles.push_back(newObstacle);
+				}
+				else if (entityData[1] == "trap")
+				{
+					obstacle* newObstacle = new obstacle('t', entityData[2]);
+					newObstacle->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
+					newObstacle->setSize({ 72 * std::stof(entityData[5]),  72 * std::stof(entityData[6]) });
+					newObstacle->setCollisionBox({ {0,0}, newObstacle->getSize() });
+					newObstacle->setFillColor(sf::Color(13, 20, 36));
 
 					m_obstacles.push_back(newObstacle);
 				}

@@ -19,9 +19,17 @@ public:
     {
         switch (m_id)
         {
-        case 'T':
-            player->healAndDeal(-std::stof(m_effect));
-            player->setInvincible(true);
+        case 't':
+            if (!player->getInvincible())
+            {
+
+                Utils::printMsg("Player health = " + std::to_string(player->getCurrentHealth()), MessageType::SUCCESS);
+
+                player->healAndDeal(-std::stof(m_effect));
+                player->setInvincible(true);
+                Utils::printMsg("Hurt Player for " + m_effect + ", player health = " + std::to_string(player->getCurrentHealth()), MessageType::SUCCESS);
+
+            }
             break;
 
         case 'b':
