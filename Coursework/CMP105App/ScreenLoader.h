@@ -8,6 +8,7 @@
 #include "checkPoint.h"
 #include "consumable.h"
 #include "enemy1.h"
+#include "obstacle.h"
 
 
 class ScreenLoader
@@ -33,6 +34,7 @@ public:
 	std::vector<destructable*> m_destructables;
 	std::vector<consumable*> m_consumables;
 	std::vector<enemy1*> m_enemies;
+	std::vector<obstacle*> m_obstacles;
 
 private:
 

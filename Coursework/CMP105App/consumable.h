@@ -38,10 +38,15 @@ public:
 	{
 		switch (m_id)
 		{
-		case 'h':
-			player->healAndDeal(std::stof(m_gift));
-			break;
-		default: break;
+			case 'h':
+				Utils::printMsg("Player health = " + std::to_string(player->getCurrentHealth()) , MessageType::SUCCESS);
+				player->healAndDeal(std::stof(m_gift));
+				Utils::printMsg("Healed Player for " + m_gift + ", player health = " + std::to_string(player->getCurrentHealth()) , MessageType::SUCCESS);
+				break;
+			case 'p':
+				player->addAbility(m_gift);
+				break;
+			default: break;
 		}
 
 		collisionResponse();
@@ -49,6 +54,8 @@ public:
 
 	void collisionResponse() { setAlive(false); };
 
+
+private:
 	std::string m_gift;
 	char m_id;
 

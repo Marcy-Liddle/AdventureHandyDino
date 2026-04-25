@@ -14,7 +14,7 @@ public:
 
    // ~destructable();
 
-    void collisionResponse(GameObject& collider, int damage) { if (damage >= m_strenght) setAlive(false); };
+    void collisionResponse(int damage) { if (damage >= m_strenght) setAlive(false); };
     
     int getStrength() { return m_strenght; };
     void setStrenght(int strenght) { m_strenght = strenght; };
