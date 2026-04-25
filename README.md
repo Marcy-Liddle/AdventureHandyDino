@@ -27,7 +27,6 @@ Adventure of a Handy Dino
 
 ## 🖥️ Next tasks:
 *  Implement pause menu
-*  Sprite the entities that are loaded in
 *  Add 1 boss fight: enemy with more health and occasionally shoot a fireball
 *  Add audio to new features
 *  Add some polish to the game
