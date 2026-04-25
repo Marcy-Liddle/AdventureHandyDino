@@ -85,6 +85,11 @@ std::vector<GameObject>  ScreenLoader::createTileset( int num_columns, int num_r
 		else tile.setCollider(false);
 		tileSet.push_back(tile);
 
+		if (isBackground)
+			m_bgTileTable.insert({ i , tile.getTextureRect()});
+		else
+			m_tileTable.insert({ i, tile.getTextureRect()});
+
 	}
 	if (!isBackground)
 	{
@@ -92,6 +97,7 @@ std::vector<GameObject>  ScreenLoader::createTileset( int num_columns, int num_r
 		m_blank = tileSet.size();
 		tile.setCollider(false);
 		tileSet.push_back(tile);
+		
 	}
 
 	return tileSet;
@@ -205,8 +211,11 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 			else if (entityType == "CheckPoint")
 			{
 				checkPoint* newCheckPoint = new checkPoint({ std::stof(entityData[1]) , std::stof(entityData[2]) });
-				newCheckPoint->setFillColor(sf::Color::Yellow);
+				//newCheckPoint->setFillColor(sf::Color::Yellow);
 				newCheckPoint->setSize({ 72,72 });
+				newCheckPoint->setTexture(&m_tileSpritesheet);
+				newCheckPoint->setTextureRect(m_tileTable[std::stoi(entityData[3])]);
+
 				newCheckPoint->setCollisionBox({ {0,0 }, { 72,72 } });
 				m_checkPoints.push_back(newCheckPoint);
 			}
@@ -216,18 +225,26 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				{
 					consumable* newHealthPickup = new consumable('h', entityData[2]);
 					newHealthPickup->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
-					newHealthPickup->setFillColor(sf::Color::Red);
+					//newHealthPickup->setFillColor(sf::Color::Red);
 					newHealthPickup->setSize({ 72,72 });
 					newHealthPickup->setCollisionBox({ {0,0} , {72,72} });
+
+					newHealthPickup->setTexture(&m_tileSpritesheet);
+					newHealthPickup->setTextureRect(m_tileTable[std::stoi(entityData[5])]);
 					m_consumables.push_back(newHealthPickup);
+
 				}
 				else if (entityData[1] == "power")
 				{
 					consumable* newPowerUp = new consumable('p', entityData[2]);
 					newPowerUp->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
-					newPowerUp->setFillColor(sf::Color(211, 3, 252));
+					//newPowerUp->setFillColor(sf::Color(211, 3, 252));
 					newPowerUp->setSize({ 72,72 });
 					newPowerUp->setCollisionBox({ {0,0} ,{72,72} });
+
+					newPowerUp->setTexture(&m_tileSpritesheet);
+					newPowerUp->setTextureRect(m_tileTable[std::stoi(entityData[5])]);
+
 
 					m_consumables.push_back(newPowerUp);
 				}
@@ -241,10 +258,14 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					destructable* newDistructable = new destructable;
 					newDistructable->setStrenght(std::stoi(entityData[2]));
 					newDistructable->setPosition({ std::stof(entityData[3]), std::stof(entityData[4]) });
-					newDistructable->setFillColor(sf::Color::Green);
+					//newDistructable->setFillColor(sf::Color::Green);
 					newDistructable->setSize({ 72,72 });
 
 					newDistructable->setCollisionBox({ {0,0} , {72,72} });
+
+					newDistructable->setTexture(&m_tileSpritesheet);
+					newDistructable->setTextureRect(m_tileTable[std::stoi(entityData[5])]);
+
 
 					m_destructables.push_back(newDistructable);
 				}
@@ -254,7 +275,11 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newObstacle->setPosition({ std::stof(entityData[2]) , std::stof(entityData[3]) });
 					newObstacle->setSize({ 72 * std::stof(entityData[4]),  72 * std::stof(entityData[5]) });
 					newObstacle->setCollisionBox({ {0,0}, newObstacle->getSize() });
-					newObstacle->setFillColor(sf::Color(255, 0, 140));
+					//newObstacle->setFillColor(sf::Color(255, 0, 140));
+
+					newObstacle->setTexture(&m_tileSpritesheet);
+					newObstacle->setTextureRect(m_tileTable[std::stoi(entityData[6])]);
+
 
 					m_obstacles.push_back(newObstacle);
 				}
@@ -264,7 +289,11 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newObstacle->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
 					newObstacle->setSize({ 72 * std::stof(entityData[5]),  72 * std::stof(entityData[6]) });
 					newObstacle->setCollisionBox({ {0,0}, newObstacle->getSize() });
-					newObstacle->setFillColor(sf::Color(13, 20, 36));
+					//newObstacle->setFillColor(sf::Color(13, 20, 36));
+
+					newObstacle->setTexture(&m_tileSpritesheet);
+					newObstacle->setTextureRect(m_tileTable[std::stoi(entityData[7])]);
+
 
 					m_obstacles.push_back(newObstacle);
 				}
