@@ -61,8 +61,8 @@ Player::Player()
 
 	setCurrentHealth(getMaxHealth());
 	m_isGrounded = true;
-	m_kickLevel = 1;
-	m_fireLevel = 1;
+	m_level = 1;
+	m_level = 1;
 	
 }
 
@@ -100,7 +100,7 @@ void Player::handleInput(float dt)
 	}
 	if (m_input->isPressed(sf::Keyboard::Scancode::F))
 	{
-		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), m_fireLevel, getPosition());
+		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), m_level, getPosition());
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
 	}
@@ -146,6 +146,18 @@ void Player::handleInput(float dt)
 	{
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
+
+	if (m_input->isPressed(sf::Keyboard::Scancode::Num1))
+		m_level = 1;
+	else if (m_input->isPressed(sf::Keyboard::Scancode::Num2))
+			m_level = 2;
+	else if (m_input->isPressed(sf::Keyboard::Scancode::Num3))
+		m_level = 3;
+	else if (m_input->isPressed(sf::Keyboard::Scancode::Num4))
+		m_level = 4;
+	else if (m_input->isPressed(sf::Keyboard::Scancode::Num5))
+		m_level = 5;
+
 	
 }
 
@@ -154,6 +166,9 @@ void Player::update(float dt)
 	m_prevAnim = m_currAnim;
 	if (getCurrentHealth() <= 0)
 		reset();
+	else if (m_currentHealth > MAX_HEALTH)
+		m_currentHealth = MAX_HEALTH;
+
 
 	if (m_isInvincible)
 		invincibiltyFrames(dt);

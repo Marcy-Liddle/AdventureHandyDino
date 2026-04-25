@@ -94,7 +94,7 @@ void enemyLevel::handleCollision()
 
 			if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, *e))
 			{
-				e->healAndDeal(-5.f * m_player.getKickLevel());
+				e->healAndDeal(-5.f * m_player.getLevel());
 			}
 
 		}
@@ -186,6 +186,6 @@ void enemyLevel::render()
 		if (f->isAlive()) m_window.draw(*f);
 	}
 
-
+	m_ui.drawUI(m_window, m_player);
 	endDraw();
 }
