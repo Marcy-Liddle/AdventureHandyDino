@@ -23,6 +23,7 @@ public:
     buttonState m_state = buttonState::ACTIVE;
     GameObject m_buttonObject;
 
+  
     sf::Text m_label;
     sf::Font m_font;
 

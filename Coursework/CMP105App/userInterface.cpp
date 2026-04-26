@@ -3,9 +3,8 @@
  userInterface::userInterface()
 {
      //"C:\Users\Marcy\105_solo_project\Coursework\CMP105App\gfx\UI_spritsheet.png"
-     //if (!m_UITexture.loadFromFile("gfx/UI_spriteSheet.png"))
-     if (!m_UITexture.loadFromFile("C:/Users/Marcy/105_solo_project/Coursework/CMP105App/gfx/UI_spritsheet.png"))
-        Utils::printMsg("No UI ", MessageType::ERROR);
+     if (!m_UITexture.loadFromFile("gfx/UI_spritsheet.png"))
+         Utils::printMsg("No UI ", MessageType::ERROR);
 
      m_banner.setTexture(&m_UITexture);
      m_banner.setTextureRect({ {6,206} , {252 , 36} });
