@@ -41,6 +41,9 @@ private:
 	std::vector<GameObject> m_tileSet;
 	std::vector<GameObject> m_bgTileSet;
 
+	std::map <int, sf::IntRect> m_tileTable;
+	std::map <int, sf::IntRect> m_bgTileTable;
+
 
 	TileMap m_tilemap;
 	TileMap m_bgtilemap;
