@@ -9,10 +9,15 @@
 #include "userInterface.h"
 
 class enemyLevel :
-    public BaseLevel
+    public Scene
 {
 public:
     enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio);
+
+    void onBegin() override {};
+
+    void onEnd() override {};
+
 
     void handleInput(float dt) override;
     void update(float dt) override;
@@ -28,7 +33,6 @@ private:
     TileMap m_tilemap;
     TileMap m_bgtilemap;
     Player m_player;
-
 
     userInterface m_ui;
 

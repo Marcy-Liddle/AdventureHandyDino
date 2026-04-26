@@ -2,15 +2,14 @@
 #include <iostream>
 
 enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio) 
-	: BaseLevel(window, input, gameState, audio)
+	: Scene(window, input, gameState, audio)
 {
 	// setup player 
 	m_player.setInput(&m_input);
 	m_player.setEdges(0, WORLD_SIZE.x);
 	m_player.setPosition({ 100, 400 });
 	m_player.setAudio(&m_audio);
-
-
+	
 	m_screenLoader.create("screen1");
 
 	
@@ -18,8 +17,10 @@ enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameSt
 
 void enemyLevel::handleInput(float dt) 
 {
-
-	m_player.handleInput(dt);
+	if (m_input.isPressed(sf::Keyboard::Scancode::Escape))
+		m_gameState.setCurrentState(State::PAUSE);
+	else
+		m_player.handleInput(dt);
 }
 
 
