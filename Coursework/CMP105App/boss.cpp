@@ -36,8 +36,17 @@ boss::~boss()
 
 void boss::update(float dt, Player* player)
 {
+
+
+	if (m_currentHealth <= 0)
+		setAlive(false);
+
 	if (!isAlive() || !m_isActive)
 		return;
+
+	if (m_isInvincible)
+		invincibiltyFrames(dt);
+
 
 	if (m_fireCooldown == 0)
 	{

@@ -15,7 +15,7 @@ AudioManager::AudioManager()
 	addSound("explosion2", "sfx/explosion2.wav");
 	addSound("explosion3", "sfx/explosion3.wav");
 	addSound("hit", "sfx/hit.wav");
-	addSound("weak", "sfx / softImpact");
+	addSound("weak", "sfx/softImpact.wav");
 	getSound("weak")->setPitch(2.f);
 
 

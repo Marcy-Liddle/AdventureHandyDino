@@ -37,6 +37,7 @@ public:
 
 	boss* m_boss;
 	GameObject m_bossTrigger;
+	GameObject m_winTrigger;
 
 private:
 

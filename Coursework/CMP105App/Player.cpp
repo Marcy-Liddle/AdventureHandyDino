@@ -158,6 +158,10 @@ void Player::handleInput(float dt)
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
 
+	if (m_input->isPressed(sf::Keyboard::Scancode::Num5))
+	{
+		levelUP(5);
+	}
 	
 }
 

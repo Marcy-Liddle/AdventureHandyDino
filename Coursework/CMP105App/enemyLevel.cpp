@@ -21,6 +21,8 @@ void enemyLevel::handleInput(float dt)
 		m_gameState.setCurrentState(State::PAUSE);
 	else
 		m_player.handleInput(dt);
+
+	
 }
 
 void enemyLevel::onBegin()
@@ -45,13 +47,16 @@ void enemyLevel::update(float dt)
 
 
 	m_screenLoader.m_boss->update(dt, &m_player);
+	if (!m_screenLoader.m_boss->isAlive())
+	{
+		m_screenLoader.m_winTrigger.setAlive(true);
+		
+	}
 
 	handleCollision();
 
 	updateCameraAndBackground();
 }
-
-
 
 
 void enemyLevel::handleCollision()
@@ -146,7 +151,6 @@ void enemyLevel::handleCollision()
 			for (auto d : m_screenLoader.m_destructables)
 			{
 
-
 				if (d->isAlive() && Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
 				{
 					m_player.m_projectiles[i]->collisionResponse();
@@ -155,12 +159,41 @@ void enemyLevel::handleCollision()
 						m_audio.playSoundbyName("impact");
 				}
 
+			}
+
+			if (m_screenLoader.m_boss->isAlive() && Collision::checkBoundingBox(*m_player.m_projectiles[i], *m_screenLoader.m_boss))
+			{
+				m_player.m_projectiles[i]->collisionResponse();
+				if (m_player.getLevel() >= m_screenLoader.m_boss->getImunity())
+				{
+					m_screenLoader.m_boss->healAndDeal(-m_player.m_projectiles[i]->getDamage());
+					m_screenLoader.m_boss->setInvincible(true);
+					m_audio.playSoundbyName("impact");
+				}
+				else
+				{
+					m_audio.playSoundbyName("weak");
+				}
+
 
 			}
 
+
 		}
 	}
+
+	for (int i = 0; i < m_screenLoader.m_boss->m_projectiles.size(); i++)
+	{
+		if (m_screenLoader.m_boss->m_projectiles[i]->isAlive() && Collision::checkBoundingBox(m_player  , *m_screenLoader.m_boss->m_projectiles[i]))
+		{
+			m_screenLoader.m_boss->m_projectiles[i]->collisionResponse();
+			m_player.healAndDeal(-m_screenLoader.m_boss->m_projectiles[i]->getDamage());
+		}
 		
+	}
+
+
+
 	for (auto c : m_screenLoader.m_checkPoints)
 	{
 		if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
@@ -202,7 +235,11 @@ void enemyLevel::handleCollision()
 		m_screenLoader.m_boss->setActive(true);
 		m_screenLoader.m_boss->setAudio(&m_audio);
 	}
-
+	
+	if (m_screenLoader.m_winTrigger.isAlive() && Collision::checkBoundingBox(m_player, m_screenLoader.m_winTrigger) && m_input.isPressed(sf::Keyboard::Scancode::Enter))
+	{
+		m_gameState.setCurrentState( State::CREDITS);
+	}
 	
 }
 

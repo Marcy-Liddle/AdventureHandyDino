@@ -16,6 +16,7 @@ public:
     bool getActive() { return m_isActive; };
     void setActive(bool set) { m_isActive = set; };
 
+    int getImunity() { return LEVEL_NOT_IMMUNE; };
 
     std::vector<fireBlast*> m_projectiles;
 

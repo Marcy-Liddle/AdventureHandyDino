@@ -67,6 +67,12 @@ void ScreenLoader::create(std::string screen)
 	m_bossTrigger.setSize({ 72, 1000 });
 	m_bossTrigger.setCollisionBox({ {0,0}, {72,1000} });
 	m_bossTrigger.setFillColor(sf::Color::Cyan);
+
+	m_winTrigger.setPosition(m_boss->getPosition());
+	m_winTrigger.setSize({ 72, 1000 });
+	m_winTrigger.setCollisionBox({ {0,0}, {72,1000} });
+	m_winTrigger.setFillColor(sf::Color::Yellow);
+	m_winTrigger.setAlive(false);
 }
 
 std::vector<GameObject>  ScreenLoader::createTileset( int num_columns, int num_rows, int size, int spacing, int scale, bool isBackground)
@@ -374,5 +380,7 @@ void ScreenLoader::render(sf::RenderWindow& window)
 		}
 	}
 
+	if (m_winTrigger.isAlive())
+		window.draw(m_winTrigger);
 
 }
