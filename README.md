@@ -27,7 +27,7 @@ Adventure of a Handy Dino
 
 ## 🖥️ Next tasks:
 *  Add 1 boss fight: enemy with more health and occasionally shoot a fireball
-*  Add audio to new features
+*  Design a basic level for the game
 *  Add some polish to the game
 
   
