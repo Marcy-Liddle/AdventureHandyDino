@@ -34,6 +34,12 @@ Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud, 
 	m_bookGraphic.setSize({ 1130, 810 });
 	m_bookGraphic.setPosition({ 5,5 });
 
+	m_textures = texture;
+	m_bookGraphic.setTexture(&m_textures);
+	m_bookGraphic.setTextureRect({ {300,415},{226,162} });
+	m_bookGraphic.setSize({ 1130, 810 });
+	m_bookGraphic.setPosition({ 5,5 });
+
 
 	sf::Vector2u screenSize = m_window.getSize();
 	sf::Vector2i screen = m_window.getPosition();
