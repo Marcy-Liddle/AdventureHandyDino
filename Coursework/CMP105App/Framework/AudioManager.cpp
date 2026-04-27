@@ -15,7 +15,8 @@ AudioManager::AudioManager()
 	addSound("explosion2", "sfx/explosion2.wav");
 	addSound("explosion3", "sfx/explosion3.wav");
 	addSound("hit", "sfx/hit.wav");
-
+	addSound("weak", "sfx / softImpact");
+	getSound("weak")->setPitch(2.f);
 
 
 	addMusic("title", "sfx/music/xDeviruchi - Title Theme .wav");

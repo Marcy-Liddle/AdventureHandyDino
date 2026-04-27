@@ -9,7 +9,7 @@
 #include "consumable.h"
 #include "enemy1.h"
 #include "obstacle.h"
-
+#include "boss.h"
 
 class ScreenLoader
 {
@@ -29,12 +29,14 @@ public:
 	std::vector<GameObject>* getLevel() { return m_tilemap.getLevel(); };
 
 
-	std::vector<TileMap*> m_screenLayouts;
 	std::vector<checkPoint*> m_checkPoints;
 	std::vector<destructable*> m_destructables;
 	std::vector<consumable*> m_consumables;
 	std::vector<enemy1*> m_enemies;
 	std::vector<obstacle*> m_obstacles;
+
+	boss* m_boss;
+	GameObject m_bossTrigger;
 
 private:
 

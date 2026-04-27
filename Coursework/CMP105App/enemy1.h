@@ -1,5 +1,7 @@
 #pragma once
 #include "Character.h"
+#include "player.h"
+
 
 class enemy1 :
     public Character
@@ -13,7 +15,7 @@ public:
     void update(float dt) override;
     void collisionResponse(GameObject& collider) override;
 
-    void setPlayerPointer(GameObject* pcPoint) { m_playerPointer = pcPoint; };
+    void setPlayerPointer(Player* pcPoint) { m_playerPointer = pcPoint; };
     void clearPlayerPointer() { m_playerPointer = nullptr;  };
     GameObject* getPlayerPointer() { return m_playerPointer; };
 
@@ -25,7 +27,7 @@ public:
     Animation m_idle;
     Animation m_active;
 
-private:
+protected:
 
     sf::Texture m_idleSheet;
 
@@ -42,7 +44,7 @@ private:
     int m_damage;
     sf::Vector2f m_spawnPoint;
 
-    GameObject* m_playerPointer;
+    Player* m_playerPointer;
 
     const float ACCELERATION = 200.f;
     const float CLOSE_ENOUGH = 10.0f;

@@ -16,13 +16,11 @@ enemy1::enemy1()
 
 	// Dino is 24x24, tiles are 18x18
 	// LCM(18,24) = 72.
-	setSize({ 36,36 });
+	setSize({ 72,72 });
 
-
-
-
+	m_standardColour = getFillColor();
 	
-	setCollisionBox({ {3,3}, { 30,30 } });
+	setCollisionBox({ {3,3}, { 70,70 } });
 	m_currAnim = &m_idle;
 	setTextureRect(m_currAnim->getCurrentFrame());
 
@@ -37,6 +35,11 @@ enemy1::~enemy1()
 
 void enemy1::update(float dt)
 {
+
+
+	if (m_currentHealth <= 0)
+		setAlive(false);
+
 	if (!isAlive())
 		setPosition(m_spawnPoint);
 	else 
@@ -86,16 +89,15 @@ void enemy1::update(float dt)
 
 		}
 
-		if (m_velocity.x > 0 && m_currAnim->getFlipped() || m_velocity.x < 0 && !m_currAnim->getFlipped())
+		if (m_velocity.x > 0 && !m_currAnim->getFlipped() || m_velocity.x < 0 && m_currAnim->getFlipped())
 			// if we gotta flip, flip.
 			m_currAnim->setFlipped(!m_currAnim->getFlipped());
+		
 		m_currAnim->animate(dt);
 		setTextureRect(m_currAnim->getCurrentFrame());
 
 	}
 
-	if (m_currentHealth <= 0)
-		setAlive(false);
 }
 
 

@@ -26,6 +26,9 @@ public:
 			case 'p':
 				player->addAbility(m_gift);
 				break;
+			case 'l':
+				player->levelUp();
+				break;
 			default: break;
 		}
 
