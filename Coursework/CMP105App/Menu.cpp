@@ -27,7 +27,7 @@ Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud, 
 Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud, std::string menuType, sf::Texture& texture)  :
 	Scene(hwnd, in, gs, aud), m_title(m_font)
 {
-
+	m_menuType = menuType;
 	m_textures = texture;
 	m_bookGraphic.setTexture(&m_textures);
 	m_bookGraphic.setTextureRect({ {300,415},{226,162} });
@@ -47,7 +47,18 @@ Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud, 
 }
 
 
+void Menu::onBegin()
+{
+	if (m_menuType == "Main")
+		m_audio.playMusicbyName("title");
+	else if (m_menuType == "Credits")
+		m_audio.playMusicbyName("victory");
+}
 
+void Menu::onEnd()
+{
+	m_audio.stopAllMusic();
+}
 
 void Menu::update(float dt)
 {

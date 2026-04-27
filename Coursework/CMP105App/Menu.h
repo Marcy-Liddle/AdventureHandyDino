@@ -15,9 +15,9 @@ public:
     void update(float dt) override;
     void render() override;
 
-    void onBegin() override {};
+    void onBegin() override;
 
-    void onEnd() override {};
+    void onEnd() override;
 
 
     void setPreviousState(std::string screen) { m_previousScreen = screen; }
@@ -35,5 +35,7 @@ private:
 
     sf::Text m_title;
     sf::Font m_font;
+
+    std::string m_menuType;
 };
 

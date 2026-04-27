@@ -15,6 +15,7 @@ enum class playerState
     CLIMBING
 
 };
+
 class Player :
     public Character
 {
@@ -31,11 +32,14 @@ public:
    
     void reset();
     void setAudio(AudioManager* audio) { m_audio = audio; };
+    AudioManager* getAudio() { return m_audio; };
+
+
     bool isAttacking() { return m_isKicking; };
 
     
     int getLevel() { return m_level; };
-    void  levelUp(int level) { m_level = level; };
+    void levelUp(int level) { m_level = level; };
 
     void setRespawn(sf::Vector2f respawn) { m_spawnPoint = respawn; };
 
@@ -92,7 +96,7 @@ private:
 
 
     AudioManager* m_audio;
-
+    
 
     const float SPRINT_COOLDOWN = 2.0f;
     const float SPRINT_SPEED_MULT = 1.5f;

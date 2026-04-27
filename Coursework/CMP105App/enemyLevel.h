@@ -14,9 +14,9 @@ class enemyLevel :
 public:
     enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio);
 
-    void onBegin() override {};
+    void onBegin() override ;
 
-    void onEnd() override {};
+    void onEnd() override ;
 
 
     void handleInput(float dt) override;

@@ -39,6 +39,6 @@ protected:
     bool m_isInvincible = false;
     float m_invulnerableTimer = 0.f;
     const float INVINCIBILITY_TIME = 2.f;
-
+    sf::Color m_standardColour;
 };
 

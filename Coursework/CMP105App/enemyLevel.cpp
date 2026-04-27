@@ -23,6 +23,15 @@ void enemyLevel::handleInput(float dt)
 		m_player.handleInput(dt);
 }
 
+void enemyLevel::onBegin()
+{
+	m_audio.playMusicbyName("bgm");
+}
+
+void enemyLevel::onEnd()
+{
+	m_audio.stopAllMusic();
+}
 
 void enemyLevel::update(float dt)
 {
@@ -89,6 +98,7 @@ void enemyLevel::handleCollision()
 					m_player.collisionResponse(*e);
 					m_player.setInvincible(true);
 					m_player.knockBack({ 10,10 });
+					m_audio.playSoundbyName("hit");
 				}
 
 			}
@@ -96,8 +106,20 @@ void enemyLevel::handleCollision()
 			if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, *e))
 			{
 				e->healAndDeal(-5.f * m_player.getLevel());
+				m_audio.playSoundbyName("softImpact");
 			}
 
+	
+			for (int i = 0; i < m_player.m_projectiles.size(); i++)
+			{
+				if (Collision::checkBoundingBox(*e, *m_player.m_projectiles[i]))
+				{
+					e->healAndDeal(-7.5f * m_player.getLevel());
+					m_player.m_projectiles[i]->collisionResponse();
+
+					m_audio.playSoundbyName("explosion2");
+				}
+			}
 		}
 		else
 		{
@@ -112,10 +134,12 @@ void enemyLevel::handleCollision()
 	{
 		for (int i = 0; i < m_player.m_projectiles.size(); i++)
 		{
-			if (Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
+			if (d->isAlive() && Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
 			{
 				m_player.m_projectiles[i]->collisionResponse();
 				d->collisionResponse(m_player.m_projectiles[i]->getDamage());
+				if (!d->isAlive())
+					m_audio.playSoundbyName("impact");
 			}
 
 		}
@@ -146,6 +170,15 @@ void enemyLevel::handleCollision()
 			if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
 			{
 				c->consume(&m_player);
+				if (!c->isAlive())
+				{
+					switch (c->m_id)
+					{
+						case 'h': m_audio.playSoundbyName("heal"); break;
+						default: m_audio.playSoundbyName("fanfare"); break;
+					}
+					
+				}
 			}
 		}
 }

@@ -62,7 +62,9 @@ Player::Player()
 	setCurrentHealth(getMaxHealth());
 	m_isGrounded = true;
 	m_level = 1;
-	m_level = 1;
+
+
+	m_standardColour = getFillColor();
 	
 }
 
@@ -90,6 +92,8 @@ void Player::handleInput(float dt)
 	{
 		reset();
 	}
+
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::LControl) && m_sprintTimer <= 0)
 	{
 		if (!m_currAnim->getFlipped())
@@ -98,12 +102,17 @@ void Player::handleInput(float dt)
 			m_velocity.x = -SPEED * SPRINT_SPEED_MULT;
 		m_sprintTimer = SPRINT_COOLDOWN;
 	}
+
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::F))
 	{
 		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), m_level, getPosition());
 		newFire->setTexture(&m_fireballTexture);
 		m_projectiles.push_back(newFire);
+		m_audio->playSoundbyName("explosion1");
 	}
+
+
 	if (m_abilities["dash"]  && !m_isDashing && m_numberOfDashes >0  && m_input->isPressed(sf::Keyboard::Scancode::L))
 	{
 		m_isDashing = true;
@@ -134,6 +143,8 @@ void Player::handleInput(float dt)
 		m_numberOfDashes -= 1;
 		std::string str = std::to_string(inputDir.x) + "," + std::to_string(inputDir.y) + " -> " + std::to_string(m_velocity.x) + "," + std::to_string(m_velocity.y);
 		Utils::printMsg(str, MessageType::SUCCESS);
+
+		m_audio->playSoundbyName("dash");
 	}
 	else
 	{
@@ -146,17 +157,6 @@ void Player::handleInput(float dt)
 	{
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
-
-	if (m_input->isPressed(sf::Keyboard::Scancode::Num1))
-		m_level = 1;
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Num2))
-			m_level = 2;
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Num3))
-		m_level = 3;
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Num4))
-		m_level = 4;
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Num5))
-		m_level = 5;
 
 	
 }
@@ -177,16 +177,19 @@ void Player::update(float dt)
 	for (fireBlast* f : m_projectiles)
 	{
 		if (f->isAlive()) f->update(dt);
+		
 	}
 
 	if (m_isDashing)
 	{
+		setFillColor({ 245, 66, 242 });
 		m_dashCooldown += dt;
 		if (m_dashCooldown >= DASH_COOLDOWN)
 		{
 			m_isDashing = false;
 			m_dashCooldown = 0;
 			
+			setFillColor(m_standardColour);
 		}
 	}
 
