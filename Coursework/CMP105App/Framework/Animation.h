@@ -48,6 +48,8 @@ public:
 	void stop();
 	void pause() { m_isPlaying = false; };
 
+	int getFrameNumber() { return m_currentFrame; }
+
 protected:
 	std::vector<sf::IntRect> m_frames;
 	sf::IntRect m_frame;

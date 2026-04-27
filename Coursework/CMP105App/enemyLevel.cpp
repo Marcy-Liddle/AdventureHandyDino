@@ -2,121 +2,60 @@
 #include <iostream>
 
 enemyLevel::enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio) 
-	: BaseLevel(window, input, gameState, audio)
+	: Scene(window, input, gameState, audio)
 {
 	// setup player 
 	m_player.setInput(&m_input);
 	m_player.setEdges(0, WORLD_SIZE.x);
-	m_player.setPosition({ 100, 100 });
+	m_player.setPosition({ 100, 400 });
 	m_player.setAudio(&m_audio);
+	
+	m_screenLoader.create("screen1");
 
-	GameObject tile;
-	std::vector<GameObject> tileSet;
-
-	int num_columns = 20;
-	int num_rows = 9;
-	int tile_size = 18;      // Visual size of the tile
-	int sheet_spacing = 1;   // Gap between tiles
-
-	// Set GameObject size (Scaling up 4x for visibility)
-	// 4 * 18 = 3 * 24 = 72 (dino size is 24).
-	tile.setSize(sf::Vector2f(tile_size * 4, tile_size * 4));
-	tile.setCollisionBox({ { 0,0 }, tile.getSize() });
-
-	for (int i = 0; i < num_columns * num_rows; i++)
-	{
-		int row = i / num_columns;
-		int col = i % num_columns;
-		tile.setTextureRect({
-			{(tile_size + sheet_spacing) * col, (tile_size + sheet_spacing) * row},
-			{tile_size, tile_size} });
-		if (col <= 4 || col >= 12) tile.setCollider(true);
-		else tile.setCollider(false);
-		tileSet.push_back(tile);
-
-	}
-
-	// Add Blank
-	tile.setTextureRect({ {0, 0}, {-24, -24} }); // Empty rect for blank
-	int b = tileSet.size();
-	tile.setCollider(false);
-	tileSet.push_back(tile);
-
-	sf::Vector2u mapDimensions{ 40, 8 };
-	std::vector<int> tileMap = {
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b ,  b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , 
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , 
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  , 
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b ,  b  , b  , b  , b  , b  , 
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b,   b,   b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  , 
-		b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b  , b	,  b  , b,	 b,	  b,   b,   b,   b,   b,   b,   b,   b,   b  , b  , b  , b  , b  , 
-		21 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 25 , 122, 122, 122, 122, 24 , 22 , 22 , 22 , 23 , 21 , 22 , 22 , 22 , 22 , 22 , 22 , 22 , 23 ,
-		141, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 143, 141, 142, 142, 142, 142, 142, 142, 142, 143
-	};
-
-
-	m_tilemap.loadTexture("gfx/tilemap.png");
-	m_tilemap.setTileSet(tileSet);
-	m_tilemap.setTileMap(tileMap, mapDimensions);
-	m_tilemap.setPosition({ 0, 0 });
-	m_tilemap.buildLevel();
-
-	tileSet.clear();
-
-	// setup background
-	tile_size = 24;
-	num_columns = 8;
-	num_rows = 3;
-	// 24 * 9 = 216, a multiple of 72, the LCM of the player and tile size.
-	tile.setSize(sf::Vector2f(tile_size * 9, tile_size * 9));
-
-	for (int i = 0; i < num_columns * num_rows; i++)
-	{
-		int row = i / num_columns;
-		int col = i % num_columns;
-
-		tile.setTextureRect({
-			{(tile_size + sheet_spacing) * col, (tile_size + sheet_spacing) * row},
-			{tile_size, tile_size} });
-		tile.setCollider(false);		// don't collide with background
-		tileSet.push_back(tile);
-	}
-
-	mapDimensions = { 14,5 };
-	tileMap = {
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-		2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		18,18,18,18,18,18,18,18,18,18,18,18,18,18,
-		18,18,18,18,18,18,18,18,18,18,18,18,18,18
-	};
-
-	m_bgtilemap.loadTexture("gfx/tilemap-backgrounds.png");
-	m_bgtilemap.setTileSet(tileSet);
-	m_bgtilemap.setTileMap(tileMap, mapDimensions);
-	m_bgtilemap.setPosition({ 0, -200 });
-	m_bgtilemap.buildLevel();
-
-
-
-	m_enemy.setPosition({ 1082.97,300.5 });
+	
 }
 
 void enemyLevel::handleInput(float dt) 
 {
-
-	m_player.handleInput(dt);
+	if (m_input.isPressed(sf::Keyboard::Scancode::Escape))
+		m_gameState.setCurrentState(State::PAUSE);
+	else
+		m_player.handleInput(dt);
 }
 
+void enemyLevel::onBegin()
+{
+	m_audio.playMusicbyName("bgm");
+}
+
+void enemyLevel::onEnd()
+{
+	m_audio.stopAllMusic();
+}
 
 void enemyLevel::update(float dt)
 {
-
 	m_player.update(dt);
-	m_enemy.update(dt);
+	
 
+	for (auto& t : m_screenLoader.m_enemies)
+	{
+		t->update(dt);
+	}
+
+
+	handleCollision();
+
+	updateCameraAndBackground();
+}
+
+
+
+
+void enemyLevel::handleCollision()
+{
 	// handle collisions
-	std::vector<GameObject>& level = *m_tilemap.getLevel();
+	std::vector<GameObject>& level = *m_screenLoader.getLevel();
 	for (auto& t : level)
 	{
 		if (t.isCollider() && Collision::checkBoundingBox(m_player, t))
@@ -124,31 +63,126 @@ void enemyLevel::update(float dt)
 			m_player.collisionResponse(t);
 		}
 
-		else if (t.isCollider() && Collision::checkBoundingBox(m_enemy, t))
+		for (auto& e : m_screenLoader.m_enemies)
 		{
-			m_enemy.collisionResponse(t);
+			if (t.isCollider() && Collision::checkBoundingBox(*e, t))
+			{
+				e->collisionResponse(t);
+			}
+		}
+
+
+		for (int i = 0; i < m_player.m_projectiles.size(); i++)
+		{
+			if (t.isCollider() && Collision::checkBoundingBox(t, *m_player.m_projectiles[i]))
+			{
+				m_player.m_projectiles[i]->collisionResponse();
+			}
+
 		}
 	}
 
-	if (Collision::checkBoundingCircle(m_player.m_aggroRange, m_enemy))
+	for (auto& e : m_screenLoader.m_enemies)
 	{
-		if (m_enemy.getPlayerPointer() == nullptr)
-			m_enemy.setPlayerPointer(&m_player);
-
-		if (Collision::checkBoundingBox(m_player, m_enemy))
+		if (Collision::checkBoundingCircle(m_player.m_aggroRange, *e))
 		{
-			m_player.setCurrentHealth(-5.f );
-			std::cout << m_player.getCurrentHealth() << "\n";
-			m_player.collisionResponse(m_enemy);
-		 }
-	}
-	else 
-	{
-		m_enemy.clearPlayerPointer();
+			if (e->getPlayerPointer() == nullptr)
+				e->setPlayerPointer(&m_player);
+
+			if (!m_player.getInvincible() && e->isAlive())
+			{
+				if (Collision::checkBoundingBox(m_player, *e))
+				{
+					m_player.healAndDeal(-5.f);
+					//std::cout << m_player.getCurrentHealth() << "\n";
+					m_player.collisionResponse(*e);
+					m_player.setInvincible(true);
+					m_player.knockBack({ 10,10 });
+					m_audio.playSoundbyName("hit");
+				}
+
+			}
+
+			if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, *e))
+			{
+				e->healAndDeal(-5.f * m_player.getLevel());
+				m_audio.playSoundbyName("softImpact");
+			}
+
+	
+			for (int i = 0; i < m_player.m_projectiles.size(); i++)
+			{
+				if (Collision::checkBoundingBox(*e, *m_player.m_projectiles[i]))
+				{
+					e->healAndDeal(-7.5f * m_player.getLevel());
+					m_player.m_projectiles[i]->collisionResponse();
+
+					m_audio.playSoundbyName("explosion2");
+				}
+			}
+		}
+		else
+		{
+			e->clearPlayerPointer();
+		}
+
+
 	}
 
-	updateCameraAndBackground();
+
+	for (auto d : m_screenLoader.m_destructables)
+	{
+		for (int i = 0; i < m_player.m_projectiles.size(); i++)
+		{
+			if (d->isAlive() && Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
+			{
+				m_player.m_projectiles[i]->collisionResponse();
+				d->collisionResponse(m_player.m_projectiles[i]->getDamage());
+				if (!d->isAlive())
+					m_audio.playSoundbyName("impact");
+			}
+
+		}
+	}
+
+	for (auto c : m_screenLoader.m_checkPoints)
+	{
+		if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+		{
+			c->setSpawn(&m_player);
+
+		}
+	}
+
+
+	for (auto o : m_screenLoader.m_obstacles)
+	{
+		if (o->isAlive() && Collision::checkBoundingBox(m_player, *o))
+		{
+			o->obstacleInteract(&m_player);
+		}
+
+	}
+
+		for (auto c : m_screenLoader.m_consumables)
+		{
+
+			if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+			{
+				c->consume(&m_player);
+				if (!c->isAlive())
+				{
+					switch (c->m_id)
+					{
+						case 'h': m_audio.playSoundbyName("heal"); break;
+						default: m_audio.playSoundbyName("fanfare"); break;
+					}
+					
+				}
+			}
+		}
 }
+
 
 
 void enemyLevel::updateCameraAndBackground()
@@ -168,14 +202,24 @@ void enemyLevel::updateCameraAndBackground()
 	m_bgtilemap.setPosition({ player_pos.x - halfViewWidth, 0 });
 }
 
+
+
+
 void enemyLevel::render()
 {
 	beginDraw();
 
-	m_bgtilemap.render(m_window);
-	m_tilemap.render(m_window);
+	m_screenLoader.render(m_window);
+
 	//m_window.draw(m_player.m_aggroRange);
 	m_window.draw(m_player);
-	m_window.draw(m_enemy);
+
+
+	for (auto f : m_player.m_projectiles)
+	{
+		if (f->isAlive()) m_window.draw(*f);
+	}
+
+	m_ui.drawUI(m_window, m_player);
 	endDraw();
 }

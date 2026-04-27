@@ -8,12 +8,10 @@
 #include <iostream>
 #include "Scene.h"
 #include "Menu.h"
-#include "LevelThatSaves.h"
 #include "Framework/AudioManager.h"
 #include "Framework/GameState.h"
-#include "LevelWithTiles.h"
-#include "LevelTwoWithTiles.h"
 #include "enemyLevel.h"
+
 
 #ifndef SFML_VERSION_MAJOR
 	#error "SFML 3 is required for this framework."
@@ -68,6 +66,7 @@ void windowProcess(sf::RenderWindow& window, Input& in)
 		{
 			in.setMousePosition(mouseMoved->position.x, mouseMoved->position.y);
 		}
+		
 		/*
 		* There are other events you may wish to poll for, such as:
 		* controller or joystick input, scrolling mouse wheel or focus gained/lost
@@ -80,8 +79,9 @@ int main()
 {
 
 	//Create the window
-	//sf::RenderWindow window(sf::VideoMode({ 432, 432 }), "Dino Handyman", sf::State::Fullscreen);
+	//sf::RenderWindow window(sf::VideoMode({ 1296, 864 }), "Dino Handyman", sf::State::Fullscreen);
 	sf::RenderWindow window(sf::VideoMode({ 1296, 864 }), "Dino Handyman");
+	
 	window.setVerticalSyncEnabled(true);
 	
 	// Initialise input and manager objects.
@@ -89,12 +89,16 @@ int main()
 	Input input;
 	GameState gameState;
 
+	sf::Texture UI_texture;
+	if (!UI_texture.loadFromFile("gfx/UI_spritsheet.png"))
+		Utils::printMsg("No UI ", MessageType::ERROR);
+
 
 	// Create level objects that may reference manager objects
+	Menu menu(window, input, gameState, audioManager, "Main", UI_texture);
+	Menu pauseMenu(window, input, gameState, audioManager, "Pause", UI_texture);
+	Menu creditsPage(window, input, gameState, audioManager, "Credits", UI_texture );
 
-	Menu menu(window, input, gameState, audioManager);
-	LevelWithTiles tile_level(window, input, gameState, audioManager);
-	LevelTwoWithTiles tile_level_two(window, input, gameState, audioManager);
 	Scene* currentScene = &menu;
 	enemyLevel enemyTest(window, input, gameState, audioManager);
 
@@ -108,8 +112,9 @@ int main()
 	std::map<State, Scene*> sceneRegistry =
 	{
 		{State::MENU, &menu},
-		{State::LEVELONE, &tile_level},
-		{State::LEVELTWO, &tile_level_two}
+		{State::PAUSE, &pauseMenu},
+		{State::LEVEL, &enemyTest},
+		{State::CREDITS, &creditsPage}
 	};
 	
 	// Game Loop
@@ -123,7 +128,8 @@ int main()
 		deltaTime = clock.restart().asSeconds();
 		if (deltaTime > 0.1f) deltaTime = 0.1f; // Clamp delta time to avoid large jumps
 
-		State requestedState = gameState.getCurrentState();
+		{
+			State requestedState = gameState.getCurrentState();
 		if (sceneRegistry[requestedState] != currentScene)
 		{
 			currentScene->onEnd();
@@ -131,13 +137,15 @@ int main()
 			currentScene->onBegin();
 		}
 		// run the core loop for the current scene
-		//currentScene->handleInput(deltaTime);
-		//currentScene->update(deltaTime);
-		//currentScene->render();
+			currentScene->handleInput(deltaTime);
+			currentScene->update(deltaTime);
+			currentScene->render();
+		}
+		
 
-		enemyTest.handleInput(deltaTime);
-		enemyTest.update(deltaTime);
-		enemyTest.render();
+		//enemyTest.handleInput(deltaTime);
+		//enemyTest.update(deltaTime);
+//		enemyTest.render();
 
 
 		// Update input class, handle pressed keys

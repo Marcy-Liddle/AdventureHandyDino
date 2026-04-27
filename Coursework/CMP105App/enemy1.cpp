@@ -4,7 +4,7 @@
 enemy1::enemy1()
 {
 	clearPlayerPointer();
-	setPosition(m_spawnPoint);
+	
 
 	m_idlePoints =
 	{
@@ -13,24 +13,18 @@ enemy1::enemy1()
 		{m_spawnPoint.x + IDLE_DISTANCE, m_spawnPoint.y}
 	};
 
-	if(!spr_idleSheet.loadFromFile("gfx/characters/enemies/slime/slimer-idle1.png"))
-		std::cerr << "No slime texture. sad";
-	
-	setTexture(&spr_idleSheet);
+
 	// Dino is 24x24, tiles are 18x18
 	// LCM(18,24) = 72.
 	setSize({ 36,36 });
 
 
-	for(int i = 0; i < 8; i++)
-		anim_idle.addFrame({ { i * 24, 0 }, { 24, 24} });
+
+
 	
-	anim_idle.setFrameSpeed(1.f / 4.f);
-
-
 	setCollisionBox({ {3,3}, { 30,30 } });
-	anim_current = &anim_idle;
-	//setTextureRect(anim_current->getCurrentFrame());
+	m_currAnim = &m_idle;
+	setTextureRect(m_currAnim->getCurrentFrame());
 
 }
 
@@ -47,8 +41,9 @@ void enemy1::update(float dt)
 		setPosition(m_spawnPoint);
 	else 
 	{
-	//	anim_current->animate(dt);
-		//setTextureRect(anim_current->getCurrentFrame());
+
+
+
 		sf::Vector2f to_target;
 		if (m_playerPointer)
 		{
@@ -91,9 +86,16 @@ void enemy1::update(float dt)
 
 		}
 
+		if (m_velocity.x > 0 && m_currAnim->getFlipped() || m_velocity.x < 0 && !m_currAnim->getFlipped())
+			// if we gotta flip, flip.
+			m_currAnim->setFlipped(!m_currAnim->getFlipped());
+		m_currAnim->animate(dt);
+		setTextureRect(m_currAnim->getCurrentFrame());
+
 	}
 
-
+	if (m_currentHealth <= 0)
+		setAlive(false);
 }
 
 

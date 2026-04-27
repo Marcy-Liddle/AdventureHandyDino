@@ -18,6 +18,9 @@ public:
 
 	// Loads and stores a reference to the spritesheet containing all the tiles required to build the level/section
 	void loadTexture(const std::string& filename);
+
+	void setTexture(sf::Texture spr) { m_texture = spr; };
+
 	// Receives a reference to an array of GameObjects representing the tile set (in order)
 	void setTileSet(const std::vector<GameObject>& ts);
 	// Receives a reference to an array of integers and map dimensions representing the map (where and what tiles to place).
@@ -32,6 +35,8 @@ public:
 
 	// Set the origin position of the tilemap section. 
 	void setPosition(sf::Vector2f pos) { m_position = pos; };
+
+
 
 protected:
 	std::vector<GameObject> m_tileSet;

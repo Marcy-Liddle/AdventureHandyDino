@@ -3,13 +3,17 @@
 Player::Player()
 {
 	if (!m_dinoTexture.loadFromFile("gfx/dino1.png"))
-		std::cerr << "No dino texture. sad";
+		Utils::printMsg("No dino texture. sad", MessageType::ERROR);
+	if (!m_fireballTexture.loadFromFile("gfx/fireBall.png"))
+		Utils::printMsg("Fire texture got put out.", MessageType::ERROR);
 
 	setTexture(&m_dinoTexture);
 	// Dino is 24x24, tiles are 18x18
 	// LCM(18,24) = 72.
 	setSize({ 72,72 });		
-	setPosition({ 24, 100 });
+	m_spawnPoint = { 24,100 };
+
+	setPosition(m_spawnPoint);
 
 	for (int i = 0; i < 4; i++)
 		m_idle.addFrame({{ i * 24, 0 }, { 24, 24} });
@@ -26,14 +30,25 @@ Player::Player()
 	for(int i = 16; i < 24; i++)
 		m_sprint.addFrame({ { i * 24, 0 }, { 24, 24} });
 
+
+	
 	m_currAnim = &m_walk;
 	m_walk.setFrameSpeed(1.f / 10.f);
 	m_idle.setFrameSpeed(1.f / 4.f);
 	m_sprint.setFrameSpeed(1.4 / 15.0f);
-	m_kick.setFrameSpeed(1.f / 4.f);
+	m_kick.setFrameSpeed(1.f / 8.f);
 	 m_kick.setLooping(false);
-	setCollisionBox({ {12,12}, { 45,51 } });
+	
+	m_normalHurtBox = sf::FloatRect({ {12,12}, { 45,51} });
+	setCollisionBox(m_normalHurtBox);
+	m_meleeHitBox.setSize(getSize());
 
+	m_kickHitBox[0] = sf::FloatRect({0,39}, {23,19});
+	m_kickHitBox[1] = sf::FloatRect({ 49,39 }, { 23,19 });
+
+	m_meleeHurtBox[0] = sf::FloatRect({23,12}, {39,51});
+	m_meleeHurtBox[1] = sf::FloatRect({ 12,12 }, { 39,51 });
+	
 	m_isGrounded = false;
 
 	float radius = getSize().x / 2.f;
@@ -45,34 +60,40 @@ Player::Player()
 	m_aggroRange.setFillColor(sf::Color::Magenta); //debug
 
 	setCurrentHealth(getMaxHealth());
+	m_isGrounded = true;
+	m_level = 1;
 
+
+	m_standardColour = getFillColor();
+	
 }
 
 void Player::handleInput(float dt)
 {
 	m_accel = { 0,0 };
+	sf::Vector2i inputDir = { 0,0 };
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::H))
 		m_isKicking = true;
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::A))
-		m_accel.x -= SPEED;
+		inputDir.x =  -1; 
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::D))
-		m_accel.x += SPEED;
+		inputDir.x = 1; 
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::Space) && m_isGrounded)
 	{
 		m_velocity.y = - JUMP_FORCE;
 		m_isGrounded = false;	// can't be jumping if we're in the air
 		m_audio->playSoundbyName("jump");
 	}
-	else if (m_input->isPressed(sf::Keyboard::Scancode::Space) && !m_isGrounded && m_canDoubleJump && !m_hasDoubleJumped)
-	{
-		m_velocity.y = - JUMP_FORCE;
-		m_hasDoubleJumped = true;
-		m_audio->playSoundbyName("jump");
-	}
+
 	if (m_input->isKeyDown(sf::Keyboard::Scancode::R))	// Reset (for debugging)
 	{
 		reset();
 	}
+
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::LControl) && m_sprintTimer <= 0)
 	{
 		if (!m_currAnim->getFlipped())
@@ -81,31 +102,96 @@ void Player::handleInput(float dt)
 			m_velocity.x = -SPEED * SPRINT_SPEED_MULT;
 		m_sprintTimer = SPRINT_COOLDOWN;
 	}
+
+
 	if (m_input->isPressed(sf::Keyboard::Scancode::F))
 	{
-		if (inLeverRange() && !m_leverPulled)
-		{
-			m_leverPulled = true;
-			m_audio->playSoundbyName("wind");
-		}
-		if (m_leverPulled && inEndRange())
-		{
-			m_gameEndTriggered = true;
-		}
+		fireBlast* newFire = new fireBlast(m_currAnim->getFlipped(), m_level, getPosition());
+		newFire->setTexture(&m_fireballTexture);
+		m_projectiles.push_back(newFire);
+		m_audio->playSoundbyName("explosion1");
 	}
+
+
+	if (m_abilities["dash"]  && !m_isDashing && m_numberOfDashes >0  && m_input->isPressed(sf::Keyboard::Scancode::L))
+	{
+		m_isDashing = true;
+		if (m_input->isPressed(sf::Keyboard::Scancode::A))
+			inputDir.x = -1;
+	
+		else if (m_input->isPressed(sf::Keyboard::Scancode::D))
+			inputDir.x = 1;
+
+		if (m_input->isKeyDown(sf::Keyboard::Scancode::W))
+			inputDir.y = -1;
+		else if (m_input->isKeyDown(sf::Keyboard::Scancode::S))
+			inputDir.y = 1;
+		else
+		{
+			if (inputDir.x == 0 && inputDir.y == 0)
+			{
+				switch (m_currAnim->getFlipped())
+				{
+					case true:  inputDir.x = -1;   break;
+					case false: inputDir.x = 1; break;
+				}
+			}
+			
+		}
+	
+		m_velocity += {inputDir.x * DASH_SPEED, inputDir.y * DASH_SPEED };
+		m_numberOfDashes -= 1;
+		std::string str = std::to_string(inputDir.x) + "," + std::to_string(inputDir.y) + " -> " + std::to_string(m_velocity.x) + "," + std::to_string(m_velocity.y);
+		Utils::printMsg(str, MessageType::SUCCESS);
+
+		m_audio->playSoundbyName("dash");
+	}
+	else
+	{
+		m_accel.x += (SPEED * inputDir.x);
+	}
+
 
 	// for debugging: "Where am I?"
 	if (m_input->isPressed(sf::Keyboard::Scancode::T))
 	{
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
+
 	
 }
 
 void Player::update(float dt)
 {
+	m_prevAnim = m_currAnim;
 	if (getCurrentHealth() <= 0)
 		reset();
+	else if (m_currentHealth > MAX_HEALTH)
+		m_currentHealth = MAX_HEALTH;
+
+
+	if (m_isInvincible)
+		invincibiltyFrames(dt);
+
+
+	for (fireBlast* f : m_projectiles)
+	{
+		if (f->isAlive()) f->update(dt);
+		
+	}
+
+	if (m_isDashing)
+	{
+		setFillColor({ 245, 66, 242 });
+		m_dashCooldown += dt;
+		if (m_dashCooldown >= DASH_COOLDOWN)
+		{
+			m_isDashing = false;
+			m_dashCooldown = 0;
+			
+			setFillColor(m_standardColour);
+		}
+	}
 
 	float radius = getSize().x / 2.f;
 	sf::Vector2f centre = { getPosition().x + radius, getPosition().y + radius };
@@ -116,6 +202,7 @@ void Player::update(float dt)
 
 
 	// newtonian model
+	
 	m_accel.y += GRAVITY;
 	m_velocity += dt * m_accel;
 	if (m_isGrounded && abs(m_accel.x) < 1.f) m_velocity *= DRAG_FACTOR;
@@ -129,15 +216,22 @@ void Player::update(float dt)
 	// handle animation
 	if (m_isKicking)
 	{
+		setCollisionBox(m_meleeHurtBox[!m_currAnim->getFlipped()]);
+		
+		m_meleeHitBox.setPosition(getPosition());
+		m_meleeHitBox.setCollisionBox(m_kickHitBox[!m_currAnim->getFlipped()]);;
+	
+
 		if (m_currAnim != &m_kick)
-		{
 			m_currAnim = &m_kick;
-		}
-		else if (!m_kick.getPlaying())
+
+		if (!m_kick.getPlaying())
 		{
 			m_isKicking = false;
 			m_kick.reset();
 			m_kick.setPlaying(true);
+			setCollisionBox(m_normalHurtBox);
+			m_meleeHitBox.setCollisionBox({ { 0,0 }, { 0,0 } });
 		}
 
 	}
@@ -153,8 +247,7 @@ void Player::update(float dt)
 			m_currAnim = &m_walk;
 }
 		// face direction
-		if (m_velocity.x > 0 && m_currAnim->getFlipped()
-			|| m_velocity.x < 0 && !m_currAnim->getFlipped())
+		if (m_velocity.x > 0 && m_currAnim->getFlipped() || m_velocity.x < 0 && !m_currAnim->getFlipped())
 			// if we gotta flip, flip.
 			m_currAnim->setFlipped(!m_currAnim->getFlipped());
 	
@@ -171,10 +264,12 @@ void Player::update(float dt)
 		setPosition({ m_rightEdge - getSize().x, getPosition().y});
 	}
 
-	//m_currAnim = &m_kick;
 	m_currAnim->animate(dt);
 	setTextureRect(m_currAnim->getCurrentFrame());
 }
+
+
+
 
 // only used on tiles for now.
 // collider confirmed to be tile with .isCollider=true
@@ -200,7 +295,8 @@ void Player::collisionResponse(GameObject& collider)
 			move({ 0, -overlap->size.y });
 			m_velocity.y = 0;       // Stop falling
 			m_isGrounded = true;    // Enable jumping
-			m_hasDoubleJumped = false;	// more jumping possible
+			m_numberOfDashes = 3;
+	
 		}
 		else
 		{
@@ -211,22 +307,12 @@ void Player::collisionResponse(GameObject& collider)
 	}
 }
 
-bool Player::inLeverRange()
-{
-	return (getPosition() - m_leverPosition).lengthSquared() < ACTIVATE_RANGE_SQUARED;
-}
-
-bool Player::inEndRange()
-{
-	return (getPosition() - m_endPosition).lengthSquared() < ACTIVATE_RANGE_SQUARED;
-}
 
 void Player::reset()
 {
-	setPosition({ 0, 50 });
+	setPosition(m_spawnPoint);
 	m_velocity = { 0,0 };
-	m_leverPulled = false;
-	m_gameEndTriggered = false;
+
 	m_currentHealth = MAX_HEALTH;
 
 }

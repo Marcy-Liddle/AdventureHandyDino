@@ -1,94 +1,199 @@
 #include "Menu.h"
 
-Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud) :
-	Scene(hwnd, in, gs, aud), m_playButtonLabel(m_font), m_playButton2Label(m_font)
+Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud, std::string menuType, sf::Texture& texture, std::string song) :
+	Scene(hwnd, in, gs, aud), m_title(m_font)
 {
-	if (!m_font.openFromFile("font/bitcount.ttf"))
-		std::cerr << "failed to load bitcount font";
-
-	m_playButtonLabel.setCharacterSize(24);		// setup labels
-	m_playButtonLabel.setPosition({ 185,93 });
-	m_playButtonLabel.setString("Level 1");
-	m_playButtonLabel.setFillColor(sf::Color::Black);
-	m_playButton2Label.setCharacterSize(24);
-	m_playButton2Label.setPosition({ 185,233 });
-	m_playButton2Label.setString("Level 2");
-	m_playButton2Label.setFillColor(sf::Color::Black);
+	m_audio.addMusic(menuType + "MenuTheme", song);
+	m_audio.getMusic(menuType + "MenuTheme")->setLooping(true);
 
 
-	m_playButton.setSize({ 216,100 });			// setup buttons
-	m_playButton.setPosition({ 108,58 });
-	m_playButton.setCollisionBox({ {0,0}, m_playButton.getSize()});
-	m_playButton.setFillColor(m_defaultButtonColour); 
-	m_play2Button.setSize({ 216,100 });			
-	m_play2Button.setPosition({ 108,198 });
-	m_play2Button.setCollisionBox({ {0,0}, m_playButton.getSize() });
-	m_play2Button.setFillColor(m_defaultButtonColour);
+	m_textures = texture;
+	m_bookGraphic.setTexture(&m_textures);
+	m_bookGraphic.setTextureRect({ {300,415},{226,162} });
+	m_bookGraphic.setSize({ 1130, 810});
+	
 
-	if (!m_titleSplash.loadFromFile("gfx/title_splash.png")) std::cerr << "no splash found";
-	m_titleImage.setTexture(&m_titleSplash);
-	m_titleImage.setSize({ 432,432 });
+	sf::Vector2u screenSize = m_window.getSize();
+	sf::Vector2i screen = m_window.getPosition();
+
+	float radius = screenSize.x / 2.f;
+	sf::Vector2f centre = { screen.x + radius, screen.y + radius };
+	sf::Vector2f diff = { screen.x - m_bookGraphic.getSize().x , screen.y - m_bookGraphic.getSize().y };
+	m_bookGraphic.setPosition({ 10 ,10});
+	loadMenu(menuType, screenSize);
 }
 
-void Menu::handleInput(float dt)
+
+Menu::Menu(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud, std::string menuType, sf::Texture& texture)  :
+	Scene(hwnd, in, gs, aud), m_title(m_font)
 {
-	sf::Vector2i mousePos{ m_input.getMouseX(), m_input.getMouseY()};
-	if(m_input.isLeftMousePressed() && 
-		Collision::checkBoundingBox(m_playButton, mousePos))
-	{
-		m_gameState.setCurrentState(State::LEVELONE);
-	}
-	if (m_input.isLeftMousePressed() &&
-		Collision::checkBoundingBox(m_play2Button, mousePos))
-	{
-		m_gameState.setCurrentState(State::LEVELTWO);
-	}
+	m_menuType = menuType;
+	m_textures = texture;
+	m_bookGraphic.setTexture(&m_textures);
+	m_bookGraphic.setTextureRect({ {300,415},{226,162} });
+	m_bookGraphic.setSize({ 1130, 810 });
+	m_bookGraphic.setPosition({ 5,5 });
+
+
+	sf::Vector2u screenSize = m_window.getSize();
+	sf::Vector2i screen = m_window.getPosition();
+
+	float radius = screenSize.x / 2.f;
+	sf::Vector2f centre = { screen.x + radius, screen.y + radius };
+	sf::Vector2f diff = { screen.x - m_bookGraphic.getSize().x , screen.y - m_bookGraphic.getSize().y };
+	m_bookGraphic.setPosition({ 10,10 });
+
+	loadMenu(menuType, screenSize);
 }
 
-void Menu::render()
-{
-	beginDraw();
-	m_window.draw(m_titleImage);
-	m_window.draw(m_playButton);
-	m_window.draw(m_playButtonLabel);
-	m_window.draw(m_play2Button);
-	m_window.draw(m_playButton2Label);
-	endDraw();
-}
-
-void Menu::update(float dt)
-{
-	sf::Vector2i mousePos{ m_input.getMouseX(), m_input.getMouseY() };
-	if (Collision::checkBoundingBox(m_playButton, mousePos))
-	{
-		m_playButton.setFillColor(m_hoverButtonColour);
-	}
-	else
-	{
-		m_playButton.setFillColor(m_defaultButtonColour);
-	}
-	if (Collision::checkBoundingBox(m_play2Button, mousePos))
-	{
-		m_play2Button.setFillColor(m_hoverButtonColour);
-	}
-	else
-	{
-		m_play2Button.setFillColor(m_defaultButtonColour);
-
-	}
-}
 
 void Menu::onBegin()
 {
-	std::cout << "starting menu\n";
-	auto view = m_window.getDefaultView();
-	view.setCenter({ 216, 216 });
-	m_window.setView(view);
-	m_audio.playMusicbyName("bgm2");
+	if (m_menuType == "Main")
+		m_audio.playMusicbyName("title");
+	else if (m_menuType == "Credits")
+		m_audio.playMusicbyName("victory");
 }
 
 void Menu::onEnd()
 {
-	std::cout << "leaving menu\n";
 	m_audio.stopAllMusic();
+}
+
+void Menu::update(float dt)
+{
+	for (auto b : m_buttonList)
+	{
+		b->update(dt);
+
+		if (b->m_state == menuButton::buttonState::SELECTED)
+		{
+			b->m_state = menuButton::buttonState::ACTIVE;
+			m_audio.stopAllMusic();
+			switch (b->m_buttonID)
+			{
+			case 'L':
+				m_gameState.setCurrentState(State::LEVEL);
+				//m_audio.getMusic("GameTheme")->play();
+				break;
+			case 'M':
+				m_gameState.setCurrentState(State::MENU);
+				//m_audio.playMusicbyName("MainMenuTheme");
+				break;
+			case 'R':
+				m_gameState.setCurrentState(State::LEVEL);
+				break;
+			case 'C':
+				m_gameState.setCurrentState(State::CREDITS);
+				break;
+			case 'Q':
+				m_window.close();
+				break;
+
+			}
+		}
+	}
+
+}
+
+void Menu::handleInput(float dt)
+{
+
+	for (auto b : m_buttonList)
+	{
+		b->handleInput(dt);
+	}
+
+}
+
+
+void Menu::render()
+{
+	beginDraw();
+
+	m_window.setView(m_window.getDefaultView());
+
+	m_window.draw(m_bookGraphic);
+
+	m_window.draw(m_title);
+	for (auto b : m_buttonList)
+	{
+		m_window.draw(*b);
+		m_window.draw(b->m_label);
+	}
+
+	endDraw();
+}
+
+
+void Menu::loadMenu(std::string menuName, sf::Vector2u screenSize)
+{
+
+	if (!m_font.openFromFile("font/antiquity-print.ttf")) std::cerr << "no font";
+	m_title.setFont(m_font);
+	
+	if (menuName == "Main")
+	{
+		m_title.setString("Adventure Of A Handy Dino");
+		m_title.setPosition({ screenSize.x * .5f - 550.f, screenSize.y * .5f - 125.f });
+		m_title.setScale({ 1.5f, 1.5f });
+
+	}
+	else if (menuName == "Pause")
+	{
+		m_title.setString("Paused");
+		m_title.setPosition({ screenSize.x * .5f - 70.f, screenSize.y * .5f - 125.f });
+		m_title.setScale({ 1.5f, 1.5f });
+	}
+	else if (menuName == "Win")
+	{
+		m_title.setString("You Did It!!!");
+		m_title.setPosition({ screenSize.x * .5f - 70.f, screenSize.y * .5f - 125.f });
+		m_title.setScale({ 2.f, 2.f });
+	}
+	else if (menuName == "Death")
+	{
+		m_title.setString("Game Over...");
+		m_title.setPosition({ screenSize.x * .5f - 70.f, screenSize.y * .5f - 125.f });
+		m_title.setScale({ 1.5f, 1.5f });
+	}
+	else if (menuName == "Credits")
+	{
+
+	}
+
+	std::ifstream menuFile("data/menu.txt");
+
+	if (!menuFile.is_open())
+	{
+		std::cerr << "menu layout file cannot be located." << std::endl;
+		return;
+	}
+
+
+	float sizeX, sizeY, posOffX, posOffY, labelOff;
+
+	std::string type, label;
+
+	char ID;
+	int i = 0;
+
+	while (menuFile >> type)
+	{
+
+		if (type == menuName)
+		{
+
+			menuFile >> sizeX >> sizeY >> posOffX >> posOffY >> label >> labelOff >> ID;
+
+			m_buttonList.push_back(new menuButton({ sizeX,sizeY }, { screenSize.x * 0.5f - posOffX , screenSize.y * 0.5f + posOffY }, label, labelOff, ID, &m_audio));
+			m_buttonList[i]->setInput(&m_input);
+			m_buttonList[i]->setTexture(&m_textures);
+
+			i += 1;
+
+		}
+
+	}
+
 }
