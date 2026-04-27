@@ -26,7 +26,11 @@ Adventure of a Handy Dino
 "Adventure of a Handy Dino" will be a metroidvania set in a small world populated with platforming challenges, enemies & at least 1 boss fight. Throughout the game, the player will find abilities; such as a dash and a grapple for mobility and upgrades to their attacks that allow them to break through obstacles; that they will need to progress and beat the game. The world should be created using tilemaps and a data-driven level loading system, and the rooms will designed in a way that encourages backtracking to use any new abilities to get past obstacles that were previously roadblocks. At the end of the game, the time taken to beat the game as well as the amount of deaths will be displayed and written to file, as well as their best time & least amount of deaths.
 
 ## 🖥️ Next tasks:
-*  Create ability for the player: dash in specified direction
+*  Add 1 boss fight: enemy with more health and occasionally shoot a fireball
+*  Add audio to new features
+*  Add some polish to the game
+
+  
 ## Must Have Features
 
 * :white_check_mark: Enemies that move towards the player when they are close and attack to deal damage to the player that can also be damaged, killed & despawned by :
@@ -35,11 +39,11 @@ Adventure of a Handy Dino
 
 ## Should Have Features
 
-* :x: Metroidvania-like progression system (upgrades for the attacks) as well as movement-based abilities; at least a dash for moving greater distances in any direction; unlocked through pickups hidden throughout the:
+* :white_check_mark:: Metroidvania-like progression system (upgrades for the attacks) as well as movement-based abilities;  at least a dash for moving greater distances in any direction; unlocked through pickups hidden throughout the:
 * :white_check_mark: Game world: Data-driven enviroment consisting of screens with collectables hidden behind obstacles you will need abilities to get through. It shoud also have a limited amount of save points to act as respawn points and record the abilities that the player has currently.
 * :bangbang: At least 1 boss fight to find and defeat with the aid of unlocked abilities to beat the game.
-* :heavy_exclamation_mark: The ability to pause the game with a transparent overlay and menu & resume exactly as was before.
-* UI that shows: the amount of health the player has left: moved up in priority
+* ✅ The ability to pause the game with a transparent overlay and menu & resume exactly as was before.
+*  :white_check_mark: UI that shows: the amount of health the player has left: moved up in priority
 
 ## Could Have Features
 

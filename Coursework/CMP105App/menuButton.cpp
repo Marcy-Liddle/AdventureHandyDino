@@ -7,7 +7,7 @@ menuButton::menuButton(sf::Vector2f size, sf::Vector2f pos, sf::String lbl, floa
 	setPosition(pos);
 	setSize(size);
 
-
+	setTextureRect({ {8,432} , {64,16} });
 	if (!m_font.openFromFile("font/fool.ttf")) std::cerr << "no font";
 	m_label.setFont(m_font);
 	m_label.setString(lbl);

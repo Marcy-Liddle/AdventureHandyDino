@@ -33,11 +33,9 @@ public:
     void setAudio(AudioManager* audio) { m_audio = audio; };
     bool isAttacking() { return m_isKicking; };
 
-    int getKickLevel() { return m_kickLevel; };
-    void kickLevelUp(int level) { m_kickLevel = level; };
-
-    int getFireLevel() { return m_fireLevel; };
-    void fireLevelUp(int level) { m_fireLevel = level; };
+    
+    int getLevel() { return m_level; };
+    void  levelUp(int level) { m_level = level; };
 
     void setRespawn(sf::Vector2f respawn) { m_spawnPoint = respawn; };
 
@@ -53,6 +51,7 @@ public:
     };
 
     bool isDashing() { return m_isDashing; };
+    int dashAmount() { return m_numberOfDashes; };
 
 private:
     sf::Texture m_dinoTexture;
@@ -77,8 +76,7 @@ private:
     float m_leftEdge;
     float m_rightEdge;
 
-    int m_kickLevel = 1;
-    int m_fireLevel = 1;
+    int m_level = 1;
 
     bool m_isKicking;
  

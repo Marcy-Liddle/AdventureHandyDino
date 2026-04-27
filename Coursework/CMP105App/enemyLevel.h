@@ -6,12 +6,18 @@
 #include "Scene.h"
 #include "enemy1.h"
 #include "ScreenLoader.h"
+#include "userInterface.h"
 
 class enemyLevel :
-    public BaseLevel
+    public Scene
 {
 public:
     enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio);
+
+    void onBegin() override {};
+
+    void onEnd() override {};
+
 
     void handleInput(float dt) override;
     void update(float dt) override;
@@ -28,11 +34,10 @@ private:
     TileMap m_bgtilemap;
     Player m_player;
 
-   // enemy1 m_enemy;
+    userInterface m_ui;
 
     const sf::Vector2i WORLD_SIZE = { 2880, 648 };
     const sf::Vector2i VIEW_SIZE = { 1296, 648 };
 
-   // destructable m_test;
 };
 

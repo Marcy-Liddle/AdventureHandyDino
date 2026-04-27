@@ -66,6 +66,7 @@ void windowProcess(sf::RenderWindow& window, Input& in)
 		{
 			in.setMousePosition(mouseMoved->position.x, mouseMoved->position.y);
 		}
+		
 		/*
 		* There are other events you may wish to poll for, such as:
 		* controller or joystick input, scrolling mouse wheel or focus gained/lost
@@ -88,11 +89,17 @@ int main()
 	Input input;
 	GameState gameState;
 
+	sf::Texture UI_texture;
+	if (!UI_texture.loadFromFile("gfx/UI_spritsheet.png"))
+		Utils::printMsg("No UI ", MessageType::ERROR);
+
 
 	// Create level objects that may reference manager objects
+	Menu menu(window, input, gameState, audioManager, "Main", UI_texture);
+	Menu pauseMenu(window, input, gameState, audioManager, "Pause", UI_texture);
+	Menu creditsPage(window, input, gameState, audioManager, "Credits", UI_texture );
 
-	Menu menu(window, input, gameState, audioManager, "Main");
-//	Scene* currentScene = &menu;
+	Scene* currentScene = &menu;
 	enemyLevel enemyTest(window, input, gameState, audioManager);
 
 	// Initialise objects for delta time
@@ -100,12 +107,15 @@ int main()
 	float deltaTime = 0.f;
 
 	gameState.setCurrentState(State::MENU);
-	//menu.onBegin();
+	menu.onBegin();
 
-	//std::map<State, Scene*> sceneRegistry =
-	//{
-	//	{State::MENU, &menu},
-	//};
+	std::map<State, Scene*> sceneRegistry =
+	{
+		{State::MENU, &menu},
+		{State::PAUSE, &pauseMenu},
+		{State::LEVEL, &enemyTest},
+		{State::CREDITS, &creditsPage}
+	};
 	
 	// Game Loop
 	while (window.isOpen())
@@ -119,23 +129,23 @@ int main()
 		if (deltaTime > 0.1f) deltaTime = 0.1f; // Clamp delta time to avoid large jumps
 
 		{
-			//State requestedState = gameState.getCurrentState();
-		//if sceneRegistry[requestedState] != currentScene)
-		//{
-		//	currentScene->onEnd();
-		//	currentScene = sceneRegistry[requestedState];
-		//	currentScene->onBegin();
-		//}
+			State requestedState = gameState.getCurrentState();
+		if (sceneRegistry[requestedState] != currentScene)
+		{
+			currentScene->onEnd();
+			currentScene = sceneRegistry[requestedState];
+			currentScene->onBegin();
+		}
 		// run the core loop for the current scene
-		//currentScene->handleInput(deltaTime);
-		//currentScene->update(deltaTime);
-		//currentScene->render();
+			currentScene->handleInput(deltaTime);
+			currentScene->update(deltaTime);
+			currentScene->render();
 		}
 		
 
-		enemyTest.handleInput(deltaTime);
-		enemyTest.update(deltaTime);
-		enemyTest.render();
+		//enemyTest.handleInput(deltaTime);
+		//enemyTest.update(deltaTime);
+//		enemyTest.render();
 
 
 		// Update input class, handle pressed keys
