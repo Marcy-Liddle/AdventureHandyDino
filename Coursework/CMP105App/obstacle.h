@@ -10,7 +10,7 @@ public:
     {
         m_id = id;
         m_effect = effect;
-
+        
     };
 
 
@@ -28,7 +28,7 @@ public:
                 player->healAndDeal(-std::stof(m_effect));
                 player->setInvincible(true);
                 Utils::printMsg("Hurt Player for " + m_effect + ", player health = " + std::to_string(player->getCurrentHealth()), MessageType::SUCCESS);
-
+                player->getAudio()->playSoundbyName("hit");
             }
             break;
 
@@ -47,5 +47,6 @@ public:
 private:
     char m_id;
     std::string m_effect;
+   
 };
 

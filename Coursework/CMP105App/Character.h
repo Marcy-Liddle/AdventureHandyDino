@@ -2,6 +2,8 @@
 #include "Framework/GameObject.h"
 #include "Framework/Animation.h"
 #include "Framework/Collision.h"
+#include "Framework/AudioManager.h"
+
 #include <iostream>
 //If time allows, transform into components
 class Character :
@@ -17,6 +19,9 @@ public:
         m_currentHealth = MAX_HEALTH;
         setAlive(true);
     }
+
+    void setAudio(AudioManager* audio) { m_audio = audio; };
+    AudioManager* getAudio() { return m_audio; };
 
 
     void setMaxHealth(float hp) { MAX_HEALTH = hp; };
@@ -39,6 +44,9 @@ protected:
     bool m_isInvincible = false;
     float m_invulnerableTimer = 0.f;
     const float INVINCIBILITY_TIME = 2.f;
+    sf::Color m_standardColour;
+
+    AudioManager* m_audio;
 
 };
 

@@ -21,8 +21,19 @@ void enemyLevel::handleInput(float dt)
 		m_gameState.setCurrentState(State::PAUSE);
 	else
 		m_player.handleInput(dt);
+
+	
 }
 
+void enemyLevel::onBegin()
+{
+	m_audio.playMusicbyName("bgm");
+}
+
+void enemyLevel::onEnd()
+{
+	m_audio.stopAllMusic();
+}
 
 void enemyLevel::update(float dt)
 {
@@ -35,12 +46,17 @@ void enemyLevel::update(float dt)
 	}
 
 
+	m_screenLoader.m_boss->update(dt, &m_player);
+	if (!m_screenLoader.m_boss->isAlive())
+	{
+		m_screenLoader.m_winTrigger.setAlive(true);
+		
+	}
+
 	handleCollision();
 
 	updateCameraAndBackground();
 }
-
-
 
 
 void enemyLevel::handleCollision()
@@ -65,11 +81,16 @@ void enemyLevel::handleCollision()
 
 		for (int i = 0; i < m_player.m_projectiles.size(); i++)
 		{
-			if (t.isCollider() && Collision::checkBoundingBox(t, *m_player.m_projectiles[i]))
+			if (t.isCollider() && m_player.m_projectiles[i]->isAlive() && Collision::checkBoundingBox(t, *m_player.m_projectiles[i]))
 			{
 				m_player.m_projectiles[i]->collisionResponse();
 			}
 
+		}
+
+		if (t.isCollider() && m_screenLoader.m_boss->getActive() && Collision::checkBoundingBox(t, *m_screenLoader.m_boss))
+		{
+			m_screenLoader.m_boss->worldCollision(t);
 		}
 	}
 
@@ -89,6 +110,7 @@ void enemyLevel::handleCollision()
 					m_player.collisionResponse(*e);
 					m_player.setInvincible(true);
 					m_player.knockBack({ 10,10 });
+					m_audio.playSoundbyName("hit");
 				}
 
 			}
@@ -96,7 +118,9 @@ void enemyLevel::handleCollision()
 			if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, *e))
 			{
 				e->healAndDeal(-5.f * m_player.getLevel());
+				m_audio.playSoundbyName("softImpact");
 			}
+
 
 		}
 		else
@@ -108,25 +132,73 @@ void enemyLevel::handleCollision()
 	}
 
 
-	for (auto d : m_screenLoader.m_destructables)
+	for (int i = 0; i < m_player.m_projectiles.size(); i++)
 	{
-		for (int i = 0; i < m_player.m_projectiles.size(); i++)
+		if (m_player.m_projectiles[i]->isAlive())
 		{
-			if (Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
+			for (auto& e : m_screenLoader.m_enemies)
+			{
+				if (e->isAlive() && Collision::checkBoundingBox(*e, *m_player.m_projectiles[i]))
+				{
+					e->healAndDeal(-7.5f * m_player.getLevel());
+					m_player.m_projectiles[i]->collisionResponse();
+
+					m_audio.playSoundbyName("explosion2");
+				}
+			}
+
+
+			for (auto d : m_screenLoader.m_destructables)
+			{
+
+				if (d->isAlive() && Collision::checkBoundingBox(*d, *m_player.m_projectiles[i]))
+				{
+					m_player.m_projectiles[i]->collisionResponse();
+					d->collisionResponse(m_player.m_projectiles[i]->getDamage());
+					if (!d->isAlive())
+						m_audio.playSoundbyName("impact");
+				}
+
+			}
+
+			if (m_screenLoader.m_boss->isAlive() && Collision::checkBoundingBox(*m_player.m_projectiles[i], *m_screenLoader.m_boss))
 			{
 				m_player.m_projectiles[i]->collisionResponse();
-				d->collisionResponse(m_player.m_projectiles[i]->getDamage());
+				if (m_player.getLevel() >= m_screenLoader.m_boss->getImunity())
+				{
+					m_screenLoader.m_boss->healAndDeal(-m_player.m_projectiles[i]->getDamage());
+					m_screenLoader.m_boss->setInvincible(true);
+					m_audio.playSoundbyName("impact");
+				}
+				else
+				{
+					m_audio.playSoundbyName("weak");
+				}
+
+
 			}
+
 
 		}
 	}
+
+	for (int i = 0; i < m_screenLoader.m_boss->m_projectiles.size(); i++)
+	{
+		if (m_screenLoader.m_boss->m_projectiles[i]->isAlive() && Collision::checkBoundingBox(m_player  , *m_screenLoader.m_boss->m_projectiles[i]))
+		{
+			m_screenLoader.m_boss->m_projectiles[i]->collisionResponse();
+			m_player.healAndDeal(-m_screenLoader.m_boss->m_projectiles[i]->getDamage());
+		}
+		
+	}
+
+
 
 	for (auto c : m_screenLoader.m_checkPoints)
 	{
 		if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
 		{
 			c->setSpawn(&m_player);
-
 		}
 	}
 
@@ -140,14 +212,35 @@ void enemyLevel::handleCollision()
 
 	}
 
-		for (auto c : m_screenLoader.m_consumables)
-		{
+	for (auto c : m_screenLoader.m_consumables)
+	{
 
-			if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+		if (c->isAlive() && Collision::checkBoundingBox(m_player, *c))
+		{
+			c->consume(&m_player);
+			if (!c->isAlive())
 			{
-				c->consume(&m_player);
-			}
+				switch (c->m_id)
+				{
+					case 'h': m_audio.playSoundbyName("heal"); break;
+					default: m_audio.playSoundbyName("fanfare"); break;
+				}
+
+				}
 		}
+	}
+
+	if (Collision::checkBoundingBox(m_player, m_screenLoader.m_bossTrigger))
+	{
+		m_screenLoader.m_boss->setActive(true);
+		m_screenLoader.m_boss->setAudio(&m_audio);
+	}
+	
+	if (m_screenLoader.m_winTrigger.isAlive() && Collision::checkBoundingBox(m_player, m_screenLoader.m_winTrigger) && m_input.isPressed(sf::Keyboard::Scancode::Enter))
+	{
+		m_gameState.setCurrentState( State::CREDITS);
+	}
+	
 }
 
 
@@ -188,5 +281,7 @@ void enemyLevel::render()
 	}
 
 	m_ui.drawUI(m_window, m_player);
+
+
 	endDraw();
 }

@@ -35,12 +35,13 @@ void Character::worldCollision(GameObject& collider)
 void Character::invincibiltyFrames( float dt)
 {
 	m_invulnerableTimer -= dt;
+	setFillColor(sf::Color::Red);
 
 	if (m_invulnerableTimer <= 0)
 	{
 		m_invulnerableTimer = INVINCIBILITY_TIME;
 		m_isInvincible = false;
-		
+		setFillColor(m_standardColour);
 	}
 }
 

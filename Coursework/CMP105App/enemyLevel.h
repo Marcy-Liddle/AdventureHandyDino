@@ -14,9 +14,9 @@ class enemyLevel :
 public:
     enemyLevel(sf::RenderWindow& window, Input& input, GameState& gameState, AudioManager& audio);
 
-    void onBegin() override {};
+    void onBegin() override ;
 
-    void onEnd() override {};
+    void onEnd() override ;
 
 
     void handleInput(float dt) override;
@@ -35,6 +35,8 @@ private:
     Player m_player;
 
     userInterface m_ui;
+
+
 
     const sf::Vector2i WORLD_SIZE = { 2880, 648 };
     const sf::Vector2i VIEW_SIZE = { 1296, 648 };

@@ -48,6 +48,8 @@ void fireBlast::update(float dt)
 
 void fireBlast::collisionResponse()
 {
+
+    setCollisionBox({ {0,0} ,{0,0} });
     m_velocity = { 0,0 };
     m_currAnim = &m_burst;
     m_isTraveling = false;

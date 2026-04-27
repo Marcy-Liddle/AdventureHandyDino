@@ -42,8 +42,9 @@ void ScreenLoader::create(std::string screen)
 
 	mapDimensions = { 14,5 };
 
+
+
 	m_bgTileSet = createTileset(8, 3, 24, 1, 9, true);
-	//loadScreen("screen1bg", b);
 	m_bgtilemap.setTexture(m_bgSpritesheet);
 	m_bgtilemap.setTileSet(m_bgTileSet);
 	m_bgtilemap.setTileMap(loadScreen("screen1bg"), mapDimensions);
@@ -59,7 +60,19 @@ void ScreenLoader::create(std::string screen)
 
 	loadEntities(screen, "Obstacle");
 
+	loadEntities(screen, "Boss");
 	
+
+	m_bossTrigger.setPosition({ m_boss->getPosition().x - 1000 , 0 });
+	m_bossTrigger.setSize({ 72, 1000 });
+	m_bossTrigger.setCollisionBox({ {0,0}, {72,1000} });
+	m_bossTrigger.setFillColor(sf::Color::Cyan);
+
+	m_winTrigger.setPosition(m_boss->getPosition());
+	m_winTrigger.setSize({ 72, 1000 });
+	m_winTrigger.setCollisionBox({ {0,0}, {72,1000} });
+	m_winTrigger.setFillColor(sf::Color::Yellow);
+	m_winTrigger.setAlive(false);
 }
 
 std::vector<GameObject>  ScreenLoader::createTileset( int num_columns, int num_rows, int size, int spacing, int scale, bool isBackground)
@@ -207,6 +220,14 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 
 				m_enemies.push_back(newEnemy);
 			}
+			else if (entityType == "Boss")
+			{
+				boss* theBoss = new boss;
+				theBoss->setPosition({ std::stof(entityData[1]) , std::stof(entityData[2]) });
+				theBoss->setActive(false);
+
+				m_boss = theBoss;
+			}
 
 			else if (entityType == "CheckPoint")
 			{
@@ -289,8 +310,7 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 					newObstacle->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
 					newObstacle->setSize({ 72 * std::stof(entityData[5]),  72 * std::stof(entityData[6]) });
 					newObstacle->setCollisionBox({ {0,0}, newObstacle->getSize() });
-					//newObstacle->setFillColor(sf::Color(13, 20, 36));
-
+				
 					newObstacle->setTexture(&m_tileSpritesheet);
 					newObstacle->setTextureRect(m_tileTable[std::stoi(entityData[7])]);
 
@@ -345,5 +365,22 @@ void ScreenLoader::render(sf::RenderWindow& window)
 	{
 		if (o->isAlive()) window.draw(*o);
 	}
+
+	window.draw(m_bossTrigger);
+
+
+
+	if (m_boss->isAlive() && m_boss->getActive())
+	{
+		window.draw(*m_boss);
+
+		for (auto f : m_boss->m_projectiles)
+		{
+			if (f->isAlive()) window.draw(*f);
+		}
+	}
+
+	if (m_winTrigger.isAlive())
+		window.draw(m_winTrigger);
 
 }

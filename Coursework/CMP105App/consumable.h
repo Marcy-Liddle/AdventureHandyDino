@@ -3,25 +3,6 @@
 #include "Framework/Animation.h"
 #include "Player.h"
 
-class consumable1 : public GameObject
-{
-	protected:
-
-	//gives the player something ie ability / health increase
-	virtual void consume(Player* player) = 0;
-	void collisionResponse(GameObject& collider) { setAlive(false); };
-	std::string m_gift;
-
-};
-
-class healthPickup : public consumable1
-{
-public:
-	void consume(Player* player) { player->healAndDeal(std::stof(m_gift)); };
-
-};
-
-
 class consumable : public GameObject
 {
 public:
@@ -30,7 +11,6 @@ public:
 	{
 		m_id = id;
 		m_gift = gift;
-
 	};
 
 	//gives the player something ie ability / health increase
@@ -46,6 +26,9 @@ public:
 			case 'p':
 				player->addAbility(m_gift);
 				break;
+			case 'l':
+				player->levelUp();
+				break;
 			default: break;
 		}
 
@@ -54,9 +37,7 @@ public:
 
 	void collisionResponse() { setAlive(false); };
 
-
-private:
 	std::string m_gift;
 	char m_id;
-
+	
 };

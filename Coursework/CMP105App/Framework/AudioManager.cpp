@@ -3,16 +3,33 @@
 AudioManager::AudioManager()
 {
 	addSound("jump", "sfx/jump.mp3");
-	addSound("wind", "sfx/wind.mp3");
 	addSound("death", "sfx/death.mp3");
+	addSound("dragonRoar","sfx/Monster_Roar1.mp3");
+	addSound("dragonAttack", "sfx/Dragon_Attack.wav");
+	addSound("softImpact", "sfx/softImpact.wav");
+	addSound("impact", "sfx/impact.wav");
+	addSound("heal", "sfx/heal.wav");
+	addSound("fanfare", "sfx/fanfare.wav");
+	addSound("dash", "sfx/dash.wav");
+	addSound("explosion1", "sfx/explosion1.wav");
+	addSound("explosion2", "sfx/explosion2.wav");
+	addSound("explosion3", "sfx/explosion3.wav");
+	addSound("hit", "sfx/hit.wav");
+	addSound("weak", "sfx/softImpact.wav");
+	getSound("weak")->setPitch(2.f);
 
-	addMusic("bgm1", "sfx/bgm1.mp3");
-	getMusic("bgm1")->setVolume(20.f);
-	addMusic("bgm2", "sfx/bgm2.mp3");
-	getMusic("bgm2")->setVolume(20.f);
-	addMusic("bgm3", "sfx/bgm3.mp3");
-	getMusic("bgm3")->setVolume(20.f);
 
+	addMusic("title", "sfx/music/xDeviruchi - Title Theme .wav");
+	getMusic("title")->setVolume(50.f);
+
+	addMusic("bgm", "sfx/music/xDeviruchi - Exploring The Unknown.wav");
+	getMusic("bgm")->setVolume(50.f);
+
+	addMusic("boss", "sfx/music/xDeviruchi - Decisive Battle.wav");
+	getMusic("boss")->setVolume(50.f);
+
+	addMusic("victory", "sfx/music/xDeviruchi - The Final of The Fantasy.wav");
+	getMusic("victory")->setVolume(50.f);
 }
 
 AudioManager::~AudioManager()

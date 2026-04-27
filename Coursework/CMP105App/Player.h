@@ -15,6 +15,7 @@ enum class playerState
     CLIMBING
 
 };
+
 class Player :
     public Character
 {
@@ -30,12 +31,15 @@ public:
    
    
     void reset();
-    void setAudio(AudioManager* audio) { m_audio = audio; };
+  
+
+
     bool isAttacking() { return m_isKicking; };
 
     
     int getLevel() { return m_level; };
-    void  levelUp(int level) { m_level = level; };
+    void levelUp() { m_level += 1; };
+    void levelUP(int lvl) { m_level = lvl; };
 
     void setRespawn(sf::Vector2f respawn) { m_spawnPoint = respawn; };
 
@@ -91,8 +95,8 @@ private:
     sf::FloatRect m_meleeHurtBox[2];
 
 
-    AudioManager* m_audio;
 
+    
 
     const float SPRINT_COOLDOWN = 2.0f;
     const float SPRINT_SPEED_MULT = 1.5f;
