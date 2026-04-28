@@ -318,5 +318,6 @@ void Player::reset()
 
 	m_projectiles.clear();
 	m_abilities.clear();
+	m_level = 1;
 
 }

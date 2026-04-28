@@ -91,7 +91,7 @@ void boss::update(float dt, Player* player)
 
 void boss::reset()
 {
-
+	m_currentHealth = MAX_HEALTH;
 	m_projectiles.clear();
 	setAlive(true);
 	setActive(false);

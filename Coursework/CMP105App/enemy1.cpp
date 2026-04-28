@@ -111,5 +111,5 @@ void enemy1::reset()
 	m_waitAtPoint = 0;
 	m_isWaiting = false;
 
-
+	m_currentHealth = MAX_HEALTH;
 }

@@ -108,7 +108,7 @@ void enemyLevel::handleCollision()
 
 	for (auto& e : m_screenLoader.m_enemies)
 	{
-		if (Collision::checkBoundingCircle(m_player.m_aggroRange, *e))
+		if ( e->isAlive() && Collision::checkBoundingCircle(m_player.m_aggroRange, *e))
 		{
 			if (e->getPlayerPointer() == nullptr)
 				e->setPlayerPointer(&m_player);
@@ -129,8 +129,12 @@ void enemyLevel::handleCollision()
 
 			if (m_player.isAttacking() && Collision::checkBoundingBox(m_player.m_meleeHitBox, *e))
 			{
-				e->healAndDeal(-5.f * m_player.getLevel());
-				m_audio.playSoundbyName("softImpact");
+				if (!e->getInvincible())
+				{
+					e->healAndDeal(-5.f * m_player.getLevel());
+					m_audio.playSoundbyName("softImpact");
+					e->setInvincible(true);
+				}
 			}
 
 
