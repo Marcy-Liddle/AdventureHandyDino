@@ -1,6 +1,17 @@
-# CMP105 Extension Proposal
+# CMP105 2026 Final Submission
+# Adventure of a Handy Dino
 
-## Student Details
+short description
+
+Controls:
+* A/D to move left/right
+* L to dash (once unlocked), paired with WASD for 8 directional movement
+* F to shoot a fireball
+* H to do a melee attack
+* Enter to interact (only used on final door)
+* Escape to pause
+
+# Student Details
 
 **Name:** Marcy Liddle
 
@@ -10,25 +21,39 @@
 
 **Abertay id:** 2400826
 
+# Changelist
+The changes you have made since the group submission.
+
+## Player Abilities:
+  * The player can now do a melee kick attack & shoot fireballs. These can be leveled up to do more damage.
+  * The player can now unlock a 8-directional dash move that allows them to travel greater distances for platforming.
+
+## Enemy npcs: 
+ * Slimes that move back & forth / towards the player that will damage on contact and can be killed by the player's melee and ranged attacks.
+ * Dragon boss that shoots fireballs towards the player that can only be hurt and killed if the player is a certain level. Defeating it reveals a door to win & end the game. 
+
+## Data-Driven Level loading
+   * The level geometry is now loaded in from file.
+   * This also includes enemy positioning, as well as collectables that help the player & obstacles that must be overcome to progress.
+
+
+# Known Bugs
+List any issues you are aware of and how to avoid them
+* Dash movement, especially with multiple in quick succession, can sometimes clip through platforms if moving directly through
+  
+
+
+
+# Proposal from March
+
 ## Game Extended
 Dino Handyman
-
 author(s)
-
 Supplied Project
-
-## Title of Extension
-
-Adventure of a Handy Dino 
 
 ## Brief Overview of game 
 
 "Adventure of a Handy Dino" will be a metroidvania set in a small world populated with platforming challenges, enemies & at least 1 boss fight. Throughout the game, the player will find abilities; such as a dash and a grapple for mobility and upgrades to their attacks that allow them to break through obstacles; that they will need to progress and beat the game. The world should be created using tilemaps and a data-driven level loading system, and the rooms will designed in a way that encourages backtracking to use any new abilities to get past obstacles that were previously roadblocks. At the end of the game, the time taken to beat the game as well as the amount of deaths will be displayed and written to file, as well as their best time & least amount of deaths.
-
-## 🖥️ Next tasks:
-* Build final level layout
-* Add some polish to the game
-
   
 ## :white_check_mark: Must Have Features
 
