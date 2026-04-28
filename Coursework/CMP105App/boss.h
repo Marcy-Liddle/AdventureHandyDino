@@ -13,6 +13,8 @@ public:
 
     void update(float dt, Player* player);
   
+    void reset();
+
     bool getActive() { return m_isActive; };
     void setActive(bool set) { m_isActive = set; };
 
@@ -30,9 +32,9 @@ private:
    
     std::vector<sf::Vector2f> m_fireOrigins = { {28,228}, {270, 228} };
 
-    const int LEVEL = 4;
+    const int LEVEL = 3;
     const float FIRE_COOLDOWN = 1.5f;
-    const int LEVEL_NOT_IMMUNE = 5;
+    const int LEVEL_NOT_IMMUNE = 4;
 
 };
 

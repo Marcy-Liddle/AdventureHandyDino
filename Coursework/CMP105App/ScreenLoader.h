@@ -24,6 +24,8 @@ public:
 
 	void loadEntities(std::string screen, std::string entityType);
 
+	void reset();
+
 	void render(sf::RenderWindow& window);
 
 	std::vector<GameObject>* getLevel() { return m_tilemap.getLevel(); };

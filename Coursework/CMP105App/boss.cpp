@@ -55,20 +55,15 @@ void boss::update(float dt, Player* player)
 		m_projectiles.push_back(newFire);
 		m_audio->playSoundbyName("dragonRoar");
 		m_fireCooldown += dt;
-		Utils::printMsg(std::to_string(m_fireCooldown), MessageType::DEBUG);
-		Utils::printMsg(std::to_string(FIRE_COOLDOWN), MessageType::DEBUG);
+	
 	}
 	else if (m_fireCooldown > FIRE_COOLDOWN)
 	{
 		m_fireCooldown = 0;
-
 	}
 	else
 	{
 		m_fireCooldown += dt;
-
-
-		Utils::printMsg(std::to_string(m_fireCooldown), MessageType::DEBUG);
 	}
 
 	for (fireBlast* f : m_projectiles)
@@ -90,5 +85,15 @@ void boss::update(float dt, Player* player)
 	m_currAnim->animate(dt);
 	setTextureRect(m_currAnim->getCurrentFrame());
 
+
+}
+
+
+void boss::reset()
+{
+
+	m_projectiles.clear();
+	setAlive(true);
+	setActive(false);
 
 }

@@ -108,7 +108,7 @@
      }
 
 
-     for (int i = 0; i < 6; i++)
+     for (int i = 0; i < 5; i++)
      {
          sf::RectangleShape star;
          if (i <= currentLevel)
@@ -128,6 +128,5 @@
      }
 
 
-     //Utils::printMsg("End");
     window.setView(world_view);
 }

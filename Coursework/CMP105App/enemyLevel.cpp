@@ -28,6 +28,9 @@ void enemyLevel::handleInput(float dt)
 void enemyLevel::onBegin()
 {
 	m_audio.playMusicbyName("bgm");
+
+	if (m_won)
+		reset();
 }
 
 void enemyLevel::onEnd()
@@ -50,7 +53,7 @@ void enemyLevel::update(float dt)
 	if (!m_screenLoader.m_boss->isAlive())
 	{
 		m_screenLoader.m_winTrigger.setAlive(true);
-		
+	
 	}
 
 	handleCollision();
@@ -74,7 +77,7 @@ void enemyLevel::handleCollision()
 		{
 			if (t.isCollider() && Collision::checkBoundingBox(*e, t))
 			{
-				e->collisionResponse(t);
+				e->worldCollision(t);
 			}
 		}
 
@@ -91,6 +94,15 @@ void enemyLevel::handleCollision()
 		if (t.isCollider() && m_screenLoader.m_boss->getActive() && Collision::checkBoundingBox(t, *m_screenLoader.m_boss))
 		{
 			m_screenLoader.m_boss->worldCollision(t);
+		}
+
+		for (int i = 0; i < m_screenLoader.m_boss->m_projectiles.size(); i++)
+		{
+			if (t.isCollider() && m_screenLoader.m_boss->m_projectiles[i]->isAlive() && Collision::checkBoundingBox(t, *m_screenLoader.m_boss->m_projectiles[i]))
+			{
+				m_screenLoader.m_boss->m_projectiles[i]->collisionResponse();
+			}
+
 		}
 	}
 
@@ -141,6 +153,7 @@ void enemyLevel::handleCollision()
 				if (e->isAlive() && Collision::checkBoundingBox(*e, *m_player.m_projectiles[i]))
 				{
 					e->healAndDeal(-7.5f * m_player.getLevel());
+					e->invincibiltyFrames(true);
 					m_player.m_projectiles[i]->collisionResponse();
 
 					m_audio.playSoundbyName("explosion2");
@@ -192,7 +205,15 @@ void enemyLevel::handleCollision()
 		
 	}
 
+	for (auto d : m_screenLoader.m_destructables)
+	{
 
+		if (d->isAlive() && Collision::checkBoundingBox(*d, m_player))
+		{
+			m_player.collisionResponse(*d);
+		}
+
+	}
 
 	for (auto c : m_screenLoader.m_checkPoints)
 	{
@@ -238,6 +259,7 @@ void enemyLevel::handleCollision()
 	
 	if (m_screenLoader.m_winTrigger.isAlive() && Collision::checkBoundingBox(m_player, m_screenLoader.m_winTrigger) && m_input.isPressed(sf::Keyboard::Scancode::Enter))
 	{
+		m_won = true;
 		m_gameState.setCurrentState( State::CREDITS);
 	}
 	
@@ -259,7 +281,7 @@ void enemyLevel::updateCameraAndBackground()
 	view.setCenter(player_pos);
 	m_window.setView(view);
 
-	m_bgtilemap.setPosition({ player_pos.x - halfViewWidth, 0 });
+	m_bgtilemap.setPosition({ player_pos.x - halfViewWidth, 72 });
 }
 
 
@@ -284,4 +306,12 @@ void enemyLevel::render()
 
 
 	endDraw();
+}
+
+
+void enemyLevel::reset()
+{
+	m_player.reset();
+	m_screenLoader.reset();
+	m_won = false;
 }

@@ -21,7 +21,7 @@ private:
     Animation m_fireBall;
     Animation m_burst;
     Animation* m_currAnim;
-    int m_damage = 10;
+    int m_damage = 5;
 
     bool m_isTraveling = true;
 };

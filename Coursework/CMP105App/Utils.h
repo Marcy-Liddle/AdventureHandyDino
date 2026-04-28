@@ -8,7 +8,7 @@ enum class MessageType { INFO, DEBUG, WARNING, ERROR, SUCCESS};
 class Utils
 {
 public:
-	const static bool DEBUG_OUTPUT = true;
+	const static bool DEBUG_OUTPUT = false;
 
 	static void printMsg(std::string msg, MessageType type = MessageType::INFO)
 	{

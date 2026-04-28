@@ -28,7 +28,7 @@ void ScreenLoader::create(std::string screen)
 {
 	
 
-	sf::Vector2u mapDimensions{ 40, 11 };
+	sf::Vector2u mapDimensions{ 80, 11 };
 
 	m_tileSet = createTileset(20, 9, 18,1,4, false);
 	
@@ -40,9 +40,7 @@ void ScreenLoader::create(std::string screen)
 	m_tilemap.buildLevel();
 
 
-	mapDimensions = { 14,5 };
-
-
+	mapDimensions = { 28,6 };
 
 	m_bgTileSet = createTileset(8, 3, 24, 1, 9, true);
 	m_bgtilemap.setTexture(m_bgSpritesheet);
@@ -51,28 +49,14 @@ void ScreenLoader::create(std::string screen)
 	m_bgtilemap.setPosition({ 0, -200 });
 	m_bgtilemap.buildLevel();
 
-
 	loadEntities(screen, "Enemy");
-
 	loadEntities(screen, "Consumable");
-
 	loadEntities(screen, "CheckPoint");
-
 	loadEntities(screen, "Obstacle");
-
 	loadEntities(screen, "Boss");
 	
 
-	m_bossTrigger.setPosition({ m_boss->getPosition().x - 1000 , 0 });
-	m_bossTrigger.setSize({ 72, 1000 });
-	m_bossTrigger.setCollisionBox({ {0,0}, {72,1000} });
-	m_bossTrigger.setFillColor(sf::Color::Cyan);
-
-	m_winTrigger.setPosition(m_boss->getPosition());
-	m_winTrigger.setSize({ 72, 1000 });
-	m_winTrigger.setCollisionBox({ {0,0}, {72,1000} });
-	m_winTrigger.setFillColor(sf::Color::Yellow);
-	m_winTrigger.setAlive(false);
+	
 }
 
 std::vector<GameObject>  ScreenLoader::createTileset( int num_columns, int num_rows, int size, int spacing, int scale, bool isBackground)
@@ -227,6 +211,20 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				theBoss->setActive(false);
 
 				m_boss = theBoss;
+				if (entityData[3] == "m")
+					m_bossTrigger.setPosition({ m_boss->getPosition().x - std::stof(entityData[4]), 0 });
+				else if (entityData[3] == "p")
+					m_bossTrigger.setPosition({m_boss->getPosition().x + std::stof(entityData[4]), 0});
+				m_bossTrigger.setSize({ 72, 1000 });
+				m_bossTrigger.setCollisionBox({ {0,0}, {72,1000} });
+				m_bossTrigger.setFillColor(sf::Color::Cyan);
+
+				m_winTrigger.setPosition(m_boss->getPosition());
+				m_winTrigger.setSize({ 72, 1000 });
+				m_winTrigger.setCollisionBox({ {0,0}, {72,1000} });
+				m_winTrigger.setFillColor(sf::Color::Yellow);
+				m_winTrigger.setAlive(false);
+
 			}
 
 			else if (entityType == "CheckPoint")
@@ -259,12 +257,26 @@ void ScreenLoader::loadEntities(std::string screen, std::string entityType)
 				{
 					consumable* newPowerUp = new consumable('p', entityData[2]);
 					newPowerUp->setPosition({ std::stof(entityData[3]) , std::stof(entityData[4]) });
-					//newPowerUp->setFillColor(sf::Color(211, 3, 252));
+					newPowerUp->setFillColor(sf::Color(211, 3, 252));
 					newPowerUp->setSize({ 72,72 });
 					newPowerUp->setCollisionBox({ {0,0} ,{72,72} });
 
 					newPowerUp->setTexture(&m_tileSpritesheet);
 					newPowerUp->setTextureRect(m_tileTable[std::stoi(entityData[5])]);
+
+
+					m_consumables.push_back(newPowerUp);
+				}
+				else if (entityData[1] == "level")
+				{
+					consumable* newPowerUp = new consumable('l', entityData[2]);
+					newPowerUp->setPosition({ std::stof(entityData[2]) , std::stof(entityData[3]) });
+					newPowerUp->setFillColor(sf::Color::Yellow);
+					newPowerUp->setSize({ 72,72 });
+					newPowerUp->setCollisionBox({ {0,0} ,{72,72} });
+
+					newPowerUp->setTexture(&m_tileSpritesheet);
+					newPowerUp->setTextureRect(m_tileTable[std::stoi(entityData[4])]);
 
 
 					m_consumables.push_back(newPowerUp);
@@ -366,7 +378,7 @@ void ScreenLoader::render(sf::RenderWindow& window)
 		if (o->isAlive()) window.draw(*o);
 	}
 
-	window.draw(m_bossTrigger);
+	//window.draw(m_bossTrigger);
 
 
 
@@ -382,5 +394,38 @@ void ScreenLoader::render(sf::RenderWindow& window)
 
 	if (m_winTrigger.isAlive())
 		window.draw(m_winTrigger);
+
+}
+
+void ScreenLoader::reset()
+{
+	for (auto d : m_destructables)
+	{
+		d->setAlive(true);
+	}
+
+	for (auto c : m_checkPoints)
+	{
+		 c->setAlive(true);
+	}
+
+
+	for (auto c : m_consumables)
+	{
+		c->setAlive(true);
+	}
+
+	for (auto e : m_enemies)
+	{
+		e->reset();
+	}
+
+	for (auto o : m_obstacles)
+	{
+		o->setAlive(true);
+	}
+
+	m_boss->reset();
+
 
 }

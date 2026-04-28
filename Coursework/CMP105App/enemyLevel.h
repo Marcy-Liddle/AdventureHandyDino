@@ -18,6 +18,8 @@ public:
 
     void onEnd() override ;
 
+    void reset();
+    
 
     void handleInput(float dt) override;
     void update(float dt) override;
@@ -36,9 +38,10 @@ private:
 
     userInterface m_ui;
 
+    bool m_won = false;
 
 
-    const sf::Vector2i WORLD_SIZE = { 2880, 648 };
+    const sf::Vector2i WORLD_SIZE = {5760, 648 };
     const sf::Vector2i VIEW_SIZE = { 1296, 648 };
 
 };

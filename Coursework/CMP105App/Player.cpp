@@ -88,12 +88,6 @@ void Player::handleInput(float dt)
 		m_audio->playSoundbyName("jump");
 	}
 
-	if (m_input->isKeyDown(sf::Keyboard::Scancode::R))	// Reset (for debugging)
-	{
-		reset();
-	}
-
-
 	if (m_input->isPressed(sf::Keyboard::Scancode::LControl) && m_sprintTimer <= 0)
 	{
 		if (!m_currAnim->getFlipped())
@@ -158,18 +152,13 @@ void Player::handleInput(float dt)
 		std::cout << getPosition().x << "/" << getPosition().y << "\n";
 	}
 
-	if (m_input->isPressed(sf::Keyboard::Scancode::Num5))
-	{
-		levelUP(5);
-	}
-	
 }
 
 void Player::update(float dt)
 {
 	m_prevAnim = m_currAnim;
 	if (getCurrentHealth() <= 0)
-		reset();
+		respawn();
 	else if (m_currentHealth > MAX_HEALTH)
 		m_currentHealth = MAX_HEALTH;
 
@@ -311,12 +300,23 @@ void Player::collisionResponse(GameObject& collider)
 	}
 }
 
-
-void Player::reset()
+void Player::respawn()
 {
+
 	setPosition(m_spawnPoint);
 	m_velocity = { 0,0 };
 
 	m_currentHealth = MAX_HEALTH;
+}
+
+
+
+void Player::reset()
+{
+	m_spawnPoint = m_spawnPoint = { 24,100 };
+	respawn();
+
+	m_projectiles.clear();
+	m_abilities.clear();
 
 }

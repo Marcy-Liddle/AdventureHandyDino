@@ -13,7 +13,8 @@ public:
     ~enemy1();
 
     void update(float dt) override;
-    void collisionResponse(GameObject& collider) override;
+  
+    void reset();
 
     void setPlayerPointer(Player* pcPoint) { m_playerPointer = pcPoint; };
     void clearPlayerPointer() { m_playerPointer = nullptr;  };
@@ -31,8 +32,6 @@ protected:
 
     sf::Texture m_idleSheet;
 
-    
-    
 
     Animation* m_currAnim;
 

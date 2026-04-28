@@ -40,11 +40,11 @@ void enemy1::update(float dt)
 	if (m_currentHealth <= 0)
 		setAlive(false);
 
-	if (!isAlive())
-		setPosition(m_spawnPoint);
 	else 
 	{
 
+		if (m_isInvincible)
+			invincibiltyFrames(dt);
 
 
 		sf::Vector2f to_target;
@@ -101,35 +101,15 @@ void enemy1::update(float dt)
 }
 
 
-//MOVE THIS TO COMPONENT
-void enemy1::collisionResponse(GameObject& collider)
+
+void enemy1::reset()
 {
-	sf::FloatRect playerCollider = getCollisionBox();
-	sf::FloatRect wallBounds = collider.getCollisionBox();
-	auto overlap = playerCollider.findIntersection(wallBounds);
-	if (!overlap) return; // if there is no overlap, then leave.
-	if (overlap->size.x < overlap->size.y)
-	{
-		// taller than wide -> collision is side-on
-		if (playerCollider.position.x < wallBounds.position.x)
-			move({ -overlap->size.x, 0 });
-		else
-			move({ overlap->size.x, 0 });
-	}
-	else
-	{
-		if (playerCollider.position.y < wallBounds.position.y)
-		{
-			// We are above the wall (Landing)
-			move({ 0, -overlap->size.y });
-			m_velocity.y = 0;       // Stop falling
-			
-		}
-		else
-		{
-			// We hit the ceiling (Bonk)
-			move({ 0, overlap->size.y });
-			m_velocity.y = 0;       // Stop moving up
-		}
-	}
+
+	setAlive(true);
+	setPosition(m_spawnPoint);
+	clearPlayerPointer();
+	m_waitAtPoint = 0;
+	m_isWaiting = false;
+
+
 }

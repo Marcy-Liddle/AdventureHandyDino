@@ -165,7 +165,9 @@ void Menu::loadMenu(std::string menuName, sf::Vector2u screenSize)
 	}
 	else if (menuName == "Credits")
 	{
-
+		m_title.setString("You Win!! Thank you for playing");
+		m_title.setPosition({ screenSize.x * .5f - 570.f, screenSize.y * .5f - 125.f });
+		m_title.setScale({ 1.5f, 1.5f });
 	}
 
 	std::ifstream menuFile("data/menu.txt");
