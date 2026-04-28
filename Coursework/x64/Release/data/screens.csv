@@ -6,22 +6,28 @@ screen1Enemy,648,576,slime
 screen1Enemy,1908,576,slime
 screen1Enemy,1872,576,slime
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-screenConsumable,health,10,1500,650,44                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+screen1Consumable,health,20,3744,576,44                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 screen1Consumable,power,dash,1080,432,67  
  
 screen1Consumable,level,360,216,67  
 screen1Consumable,level,2880,216,67   
 screen1Consumable,level,5508,288,67  
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-screenCheckPoint,2000,200,111       
+screen1CheckPoint,2952,216,111       
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 screen1Obstacle,destructable,1,936,360,26
 screen1Obstacle,destructable,1,936,432,26
 screen1Obstacle,destructable,1,936,504,26
 screen1Obstacle,destructable,1,936,576,26
+
+screen1Obstacle,destructable,3,3672,576,9
+
                                                                                                                                                                                                                                                                                                                                                                                                                     
-screenObstacle,trap,10,2000,650,1,1,68                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-screenObstacle,barrier,800,350,1,5,54
+screenObstacle,trap,10,2000,650,1,1,68 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+screen1Obstacle,barrier,2304,0,1,10,54
+
+
 screen1Boss,5256,0,m,540
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,
 /*                                                         ,

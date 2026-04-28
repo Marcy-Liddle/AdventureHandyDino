@@ -80,11 +80,11 @@ void Menu::update(float dt)
 			{
 			case 'L':
 				m_gameState.setCurrentState(State::LEVEL);
-				//m_audio.getMusic("GameTheme")->play();
+				
 				break;
 			case 'M':
 				m_gameState.setCurrentState(State::MENU);
-				//m_audio.playMusicbyName("MainMenuTheme");
+			
 				break;
 			case 'R':
 				m_gameState.setCurrentState(State::LEVEL);
@@ -163,7 +163,7 @@ void Menu::loadMenu(std::string menuName, sf::Vector2u screenSize)
 		m_title.setPosition({ screenSize.x * .5f - 70.f, screenSize.y * .5f - 125.f });
 		m_title.setScale({ 1.5f, 1.5f });
 	}
-	else if (menuName == "Credits")
+	else if (menuName == "Win")
 	{
 		m_title.setString("You Win!! Thank you for playing");
 		m_title.setPosition({ screenSize.x * .5f - 570.f, screenSize.y * .5f - 125.f });

@@ -427,5 +427,6 @@ void ScreenLoader::reset()
 
 	m_boss->reset();
 
+	m_winTrigger.setAlive(false);
 
 }

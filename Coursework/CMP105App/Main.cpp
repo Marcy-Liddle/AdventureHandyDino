@@ -97,7 +97,7 @@ int main()
 	// Create level objects that may reference manager objects
 	Menu menu(window, input, gameState, audioManager, "Main", UI_texture);
 	Menu pauseMenu(window, input, gameState, audioManager, "Pause", UI_texture);
-	Menu creditsPage(window, input, gameState, audioManager, "Credits", UI_texture );
+	Menu creditsPage(window, input, gameState, audioManager, "Win", UI_texture );
 
 	Scene* currentScene = &menu;
 	enemyLevel enemyTest(window, input, gameState, audioManager);
